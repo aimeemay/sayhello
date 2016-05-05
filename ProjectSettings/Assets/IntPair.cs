@@ -23,9 +23,7 @@ using System.Collections.Generic;
 		}
 
 		public bool compareDigits(IntPair other){
-		if ((firstDigit == other.firstDigit && secondDigit == other.secondDigit)
-			|| (secondDigit == other.firstDigit && firstDigit == other.secondDigit)) {
-
+			if (firstDigit == other.firstDigit && secondDigit == other.secondDigit) {
 				return true;
 			}
 			return false;

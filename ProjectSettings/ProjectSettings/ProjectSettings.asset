@@ -96,7 +96,7 @@ PlayerSettings:
   metroEnableLowLatencyPresentationAPI: 0
   xboxOneDisableKinectGpuReservation: 0
   virtualRealitySupported: 0
-  productGUID: a79c438737d472d4f94134d3929a4442
+  productGUID: c6ec339975a973d47904f9169e11505b
   AndroidBundleVersionCode: 1
   AndroidMinSdkVersion: 9
   AndroidPreferredInstallLocation: 1
@@ -169,7 +169,13 @@ PlayerSettings:
     banner: {fileID: 0}
   androidGamepadSupportLevel: 0
   resolutionDialogBanner: {fileID: 0}
-  m_BuildTargetIcons: []
+  m_BuildTargetIcons:
+  - m_BuildTarget: 
+    m_Icons:
+    - serializedVersion: 2
+      m_Icon: {fileID: 0}
+      m_Width: 128
+      m_Height: 128
   m_BuildTargetBatching: []
   m_BuildTargetGraphicsAPIs: []
   webPlayerTemplate: APPLICATION:Default
@@ -324,7 +330,9 @@ PlayerSettings:
   psp2InfoBarColor: 0
   psmSplashimage: {fileID: 0}
   spritePackerPolicy: 
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    1: 
+    2: 
   metroPackageName: SayHello
   metroPackageVersion: 
   metroCertificatePath: 
@@ -420,9 +428,9 @@ PlayerSettings:
   stringPropertyNames:
   - Build_ServiceEnabled::Build_ServiceEnabled
   - UNet_ServiceEnabled::UNet_ServiceEnabled
-  Build_ServiceEnabled::Build_ServiceEnabled: False
-  UNet_ServiceEnabled::UNet_ServiceEnabled: False
-  cloudProjectId: 
-  projectName: 
-  organizationId: 
+  Build_ServiceEnabled::Build_ServiceEnabled: True
+  UNet_ServiceEnabled::UNet_ServiceEnabled: True
+  cloudProjectId: f6d476bd-eaf8-4777-9743-28621f312906
+  projectName: SayHello
+  organizationId: dishlex
   cloudEnabled: 0
