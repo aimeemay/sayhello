@@ -13,12 +13,10 @@ public class Kinect2 : MonoBehaviour
 	public Dictionary<ulong, GameObject> persons;
 	public GameObject playerPlaceholder;
 	public GameObject bubblePrefab;
-	GameObject bigBubble;
 	public GameObject biggerBubble;
 	public GameObject BiggestBubble;
 	public float xvalues;
 	public float yvalues;
-	public GameObject star;
 
 	//two key value pair list of the dictionary
 	public List<GameObject> bubblesInGame;
@@ -37,6 +35,7 @@ public class Kinect2 : MonoBehaviour
 			UpdateKinect ();
 			dictionaryConverter ();
 			distanceStuff ();
+			clearDeadBubbles ();
 		}
 	}
 
@@ -125,13 +124,15 @@ public class Kinect2 : MonoBehaviour
 	List<GameObject> bigBubsCreated = new List<GameObject>();
 	List<GameObject> activatedSmlBubs = new List<GameObject>();
 
-	private GameObject CreateNewBigBubble(IntPair pair)
+	private GameObject CreateNewBigBubble(GameObject bubbleA, GameObject bubbleB, IntPair pair)
 	{
 		GameObject BiggestBubble = (GameObject)Instantiate (biggerBubble, new Vector3 (xvalues, yvalues, 0f), Quaternion.identity);
 
 		//giving bubble context
 		BiggestBubble.AddComponent<hasSmallBubbles>();
 		hasSmallBubbles item = BiggestBubble.GetComponent<hasSmallBubbles>();
+		item.bubbleA = bubbleA;
+		item.bubbleB = bubbleB;
 		item.pair = pair;
 
 		Renderer renderer = BiggestBubble.GetComponent<Renderer> ();
@@ -222,7 +223,7 @@ public class Kinect2 : MonoBehaviour
 					
 					//If Big Bubble doesn't already exist, create it
 					if (!existsAlready) {
-						CreateNewBigBubble (pair);
+						CreateNewBigBubble (bubbleA, bubbleB, pair);
 
 						//add smaller bubbles to activatedSmBubs
 						activatedSmlBubs.Add (bubbleA);
@@ -246,9 +247,6 @@ public class Kinect2 : MonoBehaviour
 						IntPair bigBubsPair = item.pair;
 
 						//Check if bigBubsCreated[t] is this pair or not, if not leave it, if yes destroy it
-						//Debug.Log(pair);
-						//Debug.Log(bigBubsPair);
-						//Debug.Log(pair == bigBubsPair);
 						if (pair.Equals(bigBubsPair)) {
 
 							//Destory Big Bubble
@@ -267,6 +265,34 @@ public class Kinect2 : MonoBehaviour
 						}
 					}
 				}
+			}
+		}
+	}
+
+	//Remove dead bubbles - kinect bug workaround
+	private void clearDeadBubbles() {
+		for (int t = 0; t < bigBubsCreated.Count; t++) {
+
+			// Get context of bigBubsCreated[t]
+			hasSmallBubbles item = bigBubsCreated[t].GetComponent<hasSmallBubbles> ();
+			GameObject bubbleA = item.bubbleA;
+			GameObject bubbleB = item.bubbleB;
+
+			bool smlBubsHasDisappeared = false;
+			for (int k = 0; k < bubblesInGame.Count; k++) {
+				if (!(bubblesInGame[k] == bubbleA) || !(bubblesInGame[k] == bubbleB)) {
+					smlBubsHasDisappeared = true;
+				}
+			}
+
+			if (!smlBubsHasDisappeared) {
+				//Destory Big Bubble
+				Destroy(bigBubsCreated[t]);
+
+				//Remove things from activated arrays
+				bigBubsCreated.Remove(bigBubsCreated[t]);
+				activatedSmlBubs.Remove(bubbleA);
+				activatedSmlBubs.Remove(bubbleB);
 			}
 		}
 	}
@@ -306,5 +332,7 @@ public class Kinect2 : MonoBehaviour
 
 // Component to give big bubble context 
 public class hasSmallBubbles : MonoBehaviour {
+	public GameObject bubbleA;
+	public GameObject bubbleB;
 	public IntPair pair;
 }
