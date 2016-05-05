@@ -10,7 +10,7 @@ public class Kinect2 : MonoBehaviour
 	private bool initialised;
 	private int numberOfBodies;
 	private Body[] bodies;
-	public new Dictionary<ulong, GameObject> persons;
+	public Dictionary<ulong, GameObject> persons;
 	public GameObject playerPlaceholder;
 	public GameObject bubblePrefab;
 	GameObject bigBubble;
@@ -21,7 +21,7 @@ public class Kinect2 : MonoBehaviour
 	public GameObject star;
 
 	//two key value pair list of the dictionary
-	public new List<GameObject> bubblesInGame;
+	public List<GameObject> bubblesInGame;
 
 	// Use this for initialisation
 	void Start ()
@@ -117,16 +117,13 @@ public class Kinect2 : MonoBehaviour
 	{
 		GameObject person = (GameObject)Instantiate (playerPlaceholder, new Vector3 (0f, 0f, 0f), Quaternion.identity);
 		person.name = id.ToString ();
-		//GameObject starObject = (GameObject)Instantiate(star, new Vector3(0f, 0f, 0f), Quaternion.identity);
-		//Renderer starRenderer = starObject.GetComponent<Renderer>();
-		//starRenderer.enabled = false;
-		//star.GetComponent<SpriteRenderer>().enabled = false;
-		Renderer renderer = person.GetComponent<Renderer> ();
+		Renderer renderer = person.GetComponent<Renderer>();
 		renderer.material.color = new Color (Random.Range (0f, 1f), Random.Range (0f, 1f), Random.Range (0f, 1f));
 		return person;
 	}
 		
-	List<GameObject> bigBubsCreated = new List<GameObject> ();
+	List<GameObject> bigBubsCreated = new List<GameObject>();
+	List<GameObject> activatedSmlBubs = new List<GameObject>();
 
 	private GameObject CreateNewBigBubble(IntPair pair)
 	{
@@ -140,11 +137,7 @@ public class Kinect2 : MonoBehaviour
 		Renderer renderer = BiggestBubble.GetComponent<Renderer> ();
 		bigBubsCreated.Add(BiggestBubble);
 
-		Debug.Log (bigBubsCreated);
-
-		//Vector3 size = new Vector3(xvalues, yvalues, 0);
-		//BiggestBubble.transform.localScale = size;
-		//Debug.Log(BiggestBubble);
+		//Debug.Log (bigBubsCreated);
 		return BiggestBubble;
 	}
 
@@ -190,46 +183,66 @@ public class Kinect2 : MonoBehaviour
 			GameObject bubbleB = bubblesInGame[pairSecondDigit];
 
 			float distab = objectDistance(bubbleA, bubbleB);
+			float firstPosx = (bubbleA.transform.position.x);
+			float secondPosx = (bubbleB.transform.position.x);
+			float firstPosy = (bubbleA.transform.position.y);
+			float secondPosy = (bubbleB.transform.position.y);
+
+			xvalues = ((firstPosx + secondPosx) / 2f);
+			yvalues = ((firstPosy + secondPosy) / 2f);
+
+			//if distance is close enough
 			if (distab <= 0.9f) {
-				float firstPosx = (bubbleA.transform.position.x);
-				float secondPosx = (bubbleB.transform.position.x);
-				float firstPosy = (bubbleA.transform.position.y);
-				float secondPosy = (bubbleB.transform.position.y);
 
-				xvalues = ((firstPosx + secondPosx) / 2f);
-				yvalues = ((firstPosy + secondPosy) / 2f);
+				//check if already activated small bubbles
+				bool alreadyPaired = false;
+				for (int t = 0; t < activatedSmlBubs.Count; t++) {
 
-				bubbleA.GetComponent<SpriteRenderer>().enabled = false;
-				bubbleB.GetComponent<SpriteRenderer>().enabled = false;
-		        
-				//Check if Big Bubble already exists
-				bool existsAlready = false;
-				for (int t = 0; t < bigBubsCreated.Count; t++) {
-
-					//get bigBubsCreated[t] context
-					hasSmallBubbles item = bigBubsCreated[t].GetComponent<hasSmallBubbles>();
-					IntPair bigBubsPair = item.pair;
-
-					if (pair.Equals(bigBubsPair)) {
-						existsAlready = true;
+					if (activatedSmlBubs[t] == bubbleA
+						|| activatedSmlBubs[t] == bubbleB ) {
+						alreadyPaired = true;
 					}
 				}
+
+				//If small bubbles in pair are not activated, active pair them!
+				if (!alreadyPaired) {      
+
+					//Check if Big Bubble already exists
+					bool existsAlready = false;
+					for (int t = 0; t < bigBubsCreated.Count; t++) {
+
+						//get bigBubsCreated[t] context
+						hasSmallBubbles item = bigBubsCreated [t].GetComponent<hasSmallBubbles> ();
+						IntPair bigBubsPair = item.pair;
+
+						if (pair.Equals (bigBubsPair)) {
+							existsAlready = true;
+						}
+					}
 					
-				//If Big Bubble doesn't already exist, create it
-				if (!existsAlready) {
-					CreateNewBigBubble(pair);
+					//If Big Bubble doesn't already exist, create it
+					if (!existsAlready) {
+						CreateNewBigBubble (pair);
+
+						//add smaller bubbles to activatedSmBubs
+						activatedSmlBubs.Add (bubbleA);
+						activatedSmlBubs.Add (bubbleB);
+						Debug.Log (activatedSmlBubs);
+
+						//remove smaller bubbles
+						bubbleA.GetComponent<SpriteRenderer> ().enabled = false;
+						bubbleB.GetComponent<SpriteRenderer> ().enabled = false;
+					}
 				}
 
 			} else {
-				bool isEmpty = !bigBubsCreated.Any();
+				bool isEmpty = !bigBubsCreated.Any ();
 				//If Big Bubbles exist, 
 				if (!isEmpty) {
-
-
 					for (int t = 0; t < bigBubsCreated.Count; t++) {
 
 						// Get context of bigBubsCreated[t]
-						hasSmallBubbles item = bigBubsCreated[t].GetComponent<hasSmallBubbles>();
+						hasSmallBubbles item = bigBubsCreated [t].GetComponent<hasSmallBubbles> ();
 						IntPair bigBubsPair = item.pair;
 
 						//Check if bigBubsCreated[t] is this pair or not, if not leave it, if yes destroy it
@@ -237,16 +250,22 @@ public class Kinect2 : MonoBehaviour
 						//Debug.Log(bigBubsPair);
 						//Debug.Log(pair == bigBubsPair);
 						if (pair.Equals(bigBubsPair)) {
+
+							//Destory Big Bubble
 							Destroy(bigBubsCreated[t]);
+
+							//Remove things from activated arrays
 							bigBubsCreated.Remove(bigBubsCreated[t]);
+							activatedSmlBubs.Remove(bubbleA);
+							activatedSmlBubs.Remove(bubbleB);
+				
+							//Show small bubbles again
+							bubbleA.GetComponent<SpriteRenderer>().enabled = true;
+							bubbleB.GetComponent<SpriteRenderer>().enabled = true;
+							Debug.Log (activatedSmlBubs);
+
 						}
 					}
-
-
-					//Transform starObject = bubbleA.transform.GetChild (0);
-					//starObject.GetComponent<SpriteRenderer>().enabled = false;
-					bubbleA.GetComponent<SpriteRenderer>().enabled = true;
-					bubbleB.GetComponent<SpriteRenderer>().enabled = true;
 				}
 			}
 		}
