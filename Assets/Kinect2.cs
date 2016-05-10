@@ -12,13 +12,12 @@ public class Kinect2 : MonoBehaviour
 	private Body[] bodies;
 	public Dictionary<ulong, GameObject> persons;
 	public GameObject playerPlaceholder;
-	public GameObject bubblePrefab;
 	public GameObject biggerBubble;
-	public GameObject BiggestBubble;
-	public float xvalues;
-	public float yvalues;
+	private GameObject BiggestBubble;
+	private float xvalues;
+	private float yvalues;
 
-	//two key value pair list of the dictionary
+	//List Of bubbles In the game.
 	public List<GameObject> bubblesInGame;
 
 	// Use this for initialisation
@@ -30,15 +29,22 @@ public class Kinect2 : MonoBehaviour
 	void Update ()
 	{
 		if (initialised == false) {
+			//start the kinect initialised
 			StartKinect ();
 		} else {
+			//All done per tick of game run
+			//update kinnect for every tick if initialised
 			UpdateKinect ();
+			//Converts the dictionary of people into list for detecting bubbles in game
 			dictionaryConverter ();
+			//Calculates distance between two pairs, can do this for multiple pairs. 
 			distanceStuff ();
+			//Clears the dead bubbles from game if the bubbles(people are not in game anymore)
 			clearDeadBubbles ();
 		}
 	}
 
+	//Starts up the kinect. checks if sensors is working if not open it check for body sources and add any bodies to the dictionary. 
 	private void StartKinect ()
 	{
 		kSensor = KinectSensor.GetDefault ();
@@ -54,6 +60,7 @@ public class Kinect2 : MonoBehaviour
 		}
 	}
 
+	//Take latest frames if body reader is empty, get body data and refresh it. Get tracked ids of people detected. 
 	private void UpdateKinect ()
 	{
 		if (bodyReader != null) {
@@ -111,7 +118,7 @@ public class Kinect2 : MonoBehaviour
 		}
 	}
 
-	//have if bubble with script
+	//Creates a new person using tracked ids kinnect has picked up
 	private GameObject CreateNewPerson (ulong id)
 	{
 		GameObject person = (GameObject)Instantiate (playerPlaceholder, new Vector3 (0f, 0f, 0f), Quaternion.identity);
@@ -120,10 +127,13 @@ public class Kinect2 : MonoBehaviour
 		renderer.material.color = new Color (Random.Range (0f, 1f), Random.Range (0f, 1f), Random.Range (0f, 1f));
 		return person;
 	}
-		
+
+	//list of big bubbles that have been created in the game screen
 	List<GameObject> bigBubsCreated = new List<GameObject>();
+	//List of activated small bubbles in game: What this means is bubles that have paired and met distance requirements
 	List<GameObject> activatedSmlBubs = new List<GameObject>();
 
+	//creates a new big bubbles using two bubbles in game and their pair
 	private GameObject CreateNewBigBubble(GameObject bubbleA, GameObject bubbleB, IntPair pair)
 	{
 		GameObject BiggestBubble = (GameObject)Instantiate (biggerBubble, new Vector3 (xvalues, yvalues, 0f), Quaternion.identity);
@@ -137,34 +147,35 @@ public class Kinect2 : MonoBehaviour
 
 		Renderer renderer = BiggestBubble.GetComponent<Renderer> ();
 		bigBubsCreated.Add(BiggestBubble);
-
-		//Debug.Log (bigBubsCreated);
 		return BiggestBubble;
 	}
 
+	//converts persons dictionary into a list so we can iterate over people in game and give them bubbles;
 	public List<GameObject> dictionaryConverter ()
 	{
 		bubblesInGame = persons.Values.ToList ();
 		return bubblesInGame;
 	}
 
+
+	//returns the distance betwen two game objects
 	private float objectDistance (GameObject a, GameObject b)
 	{
 		float distance = Vector3.Distance (a.transform.position, b.transform.position);
 		return distance;
 
 	}
-		
-	private void distanceStuff ()
-	{
-		//Debug.Log(bubblesInGame.Count);
-		List<IntPair> pairs = new List<IntPair> ();
 
-		//Create/Update list of all possible pairs
+	public List<IntPair> pairs;
+
+	public void grabbingPairs (){
+		pairs = new List<IntPair> ();
 		for (int i = 0; i < bubblesInGame.Count; i++) {
 			for (int j = i + 1 ; j < bubblesInGame.Count; j++) {
 				if (i != j) {
 					IntPair pair = new IntPair (i, j);
+					//GameObjectPair pair = new GameObjectPair (bubblesInGame [i], bubblesInGame [j]);
+
 					if (pairs.Contains (pair)) {
 						continue;
 					} else {
@@ -173,13 +184,20 @@ public class Kinect2 : MonoBehaviour
 				}
 			}
 		}
+	}
+		
 
-		//Debug.Log(pairs.Count);
+	private void distanceStuff ()
+	{
+
+		//Create/Update list of all possible pairs
+		grabbingPairs();
 
 		for (int k = 0; k < pairs.Count; k++) {
 			IntPair pair = pairs[k];
 			int pairFirstDigit = pair.firstDigit;
 			int pairSecondDigit = pair.secondDigit;
+
 			GameObject bubbleA = bubblesInGame[pairFirstDigit];
 			GameObject bubbleB = bubblesInGame[pairSecondDigit];
 
@@ -192,7 +210,7 @@ public class Kinect2 : MonoBehaviour
 			xvalues = ((firstPosx + secondPosx) / 2f);
 			yvalues = ((firstPosy + secondPosy) / 2f);
 
-			//if distance is close enough
+			//if distance is close enough(simulated collision)
 			if (distab <= 0.9f) {
 
 				//check if already activated small bubbles
@@ -272,28 +290,77 @@ public class Kinect2 : MonoBehaviour
 	//Remove dead bubbles - kinect bug workaround
 	private void clearDeadBubbles() {
 		for (int t = 0; t < bigBubsCreated.Count; t++) {
-
 			// Get context of bigBubsCreated[t]
 			hasSmallBubbles item = bigBubsCreated[t].GetComponent<hasSmallBubbles> ();
-			GameObject bubbleA = item.bubbleA;
-			GameObject bubbleB = item.bubbleB;
+			GameObject bubbleA;
+			GameObject bubbleB;
 
-			bool smlBubsHasDisappeared = false;
-			for (int k = 0; k < bubblesInGame.Count; k++) {
-				if (!(bubblesInGame[k] == bubbleA) || !(bubblesInGame[k] == bubbleB)) {
-					smlBubsHasDisappeared = true;
-				}
+			if (item.bubbleA) {
+				bubbleA = item.bubbleA;
+			} else {
+				bubbleA = null;
 			}
 
-			if (!smlBubsHasDisappeared) {
+			if (item.bubbleB) {
+				bubbleB = item.bubbleB;
+			} else {
+				bubbleB = null;
+			}
+
+			//GameObject bubbleA = item.bubbleA;
+			Debug.Log (bubbleA);
+			Debug.Log (bubbleB);
+
+			//GameObject bubbleB = item.bubbleB;
+			//Debug.Log (bubbleB);
+
+			if ((bubbleA == null) || (bubbleB == null)) {
 				//Destory Big Bubble
 				Destroy(bigBubsCreated[t]);
 
+				//Reshow Smaller Bubble if still exists
+				if (bubbleA != null) {
+					bubbleA.GetComponent<SpriteRenderer> ().enabled = true;
+				}
+
+				if (bubbleB != null) {
+					bubbleB.GetComponent<SpriteRenderer> ().enabled = true;
+				}
+					
 				//Remove things from activated arrays
-				bigBubsCreated.Remove(bigBubsCreated[t]);
 				activatedSmlBubs.Remove(bubbleA);
 				activatedSmlBubs.Remove(bubbleB);
+				bigBubsCreated.Remove(bigBubsCreated[t]);
+				t--;
 			}
+
+			//Debug.Log (bubbleA + " " + bubbleB);
+
+//			bool smlBubsHasDisappeared = true;
+//			//if we can find both small bubbles, then don't destroy the big bubble
+//			for (int k = 0; k < bubblesInGame.Count; k++) {
+//				if (bubblesInGame[k] == bubbleA) {
+//					//Debug.Log ("found the 1st bubble");
+//					for (int n = 0; n < bubblesInGame.Count; n++) {
+//						if (bubblesInGame[n] == bubbleB) {
+//							//Debug.Log ("found the 2nd bubble");
+//							smlBubsHasDisappeared = false;
+//
+//						}
+//					}
+//				}
+//			}
+//
+//			if (smlBubsHasDisappeared) {
+//				//Debug.Log ("destroying the big bubble");
+//				//Destory Big Bubble
+//				Destroy(bigBubsCreated[t]);
+//
+//				//Remove things from activated arrays
+//				bigBubsCreated.Remove(bigBubsCreated[t]);
+//				activatedSmlBubs.Remove(bubbleA);
+//				activatedSmlBubs.Remove(bubbleB);
+//			}
 		}
 	}
 
@@ -301,16 +368,8 @@ public class Kinect2 : MonoBehaviour
 	{
 		Windows.Kinect.Joint spinebase = body.Joints [JointType.SpineBase];
 		CameraSpacePoint csp = spinebase.Position;
-
-
-		//Windows.Kinect.Joint leftHand = body.Joints[JointType.HandLeft];
-		//CameraSpacePoint cspL = leftHand.Position;
-
-		//Windows.Kinect.Joint rightHand = body.Joints[JointType.HandRight];
-		//CameraSpacePoint cspR = rightHand.Position;
-
-		//Vector3 size = new Vector3(Mathf.Abs(Mathf.Max(cspL.X, cspR.X) - Mathf.Min(cspL.X, cspR.X)), Mathf.Abs(Mathf.Max(cspL.X, cspR.X) - Mathf.Min(cspL.X, cspR.X)), Mathf.Abs(Mathf.Max(cspL.X, cspR.X) - Mathf.Min(cspL.X, cspR.X)));
 		Vector3 size = new Vector3 (0.08f, 0.08f, 0);
+		//position of persons game object(edit this for positional reajustment)
 		person.transform.position = new Vector3 (csp.X + 0.25f, -csp.Z + 0.45f, 0f);
 		person.transform.localScale = size;
 	}
