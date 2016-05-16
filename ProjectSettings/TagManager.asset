@@ -6,6 +6,7 @@ TagManager:
   tags:
   - bubbleCollider
   - Floor
+  - FunFact
   layers:
   - Default
   - TransparentFX
