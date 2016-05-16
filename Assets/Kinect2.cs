@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Windows.Kinect;
 using System;
 using System.Linq;
+using Random=UnityEngine.Random;
 
 public class Kinect2 : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class Kinect2 : MonoBehaviour
 	private GameObject BiggestBubble;
 	private float xvalues;
 	private float yvalues;
+
 
 	//List Of bubbles In the game.
 	public List<GameObject> bubblesInGame;
@@ -139,7 +141,6 @@ public class Kinect2 : MonoBehaviour
 	private GameObject CreateNewBigBubble(GameObject bubbleA, GameObject bubbleB, IntPair pair)
 	{
 		GameObject BiggestBubble = (GameObject)Instantiate (biggerBubble, new Vector3 (xvalues, yvalues, 0f), Quaternion.identity);
-
 		//giving bubble context
 		BiggestBubble.AddComponent<hasSmallBubbles>();
 		hasSmallBubbles item = BiggestBubble.GetComponent<hasSmallBubbles>();
@@ -368,6 +369,96 @@ public class Kinect2 : MonoBehaviour
 		person.transform.localScale = size;
 	}
 
+
+
+	public Body KinectA;
+	public Body KinectB;
+
+	public void checkHighFive()
+	{
+		//Check through BigBubs to see if they are high fiving
+		for (int k = 0; k < bigBubsCreated.Count; k++)
+		{
+			//Get each bubble from big bubble
+			hasSmallBubbles item = bigBubsCreated[k].GetComponent<hasSmallBubbles>();
+			GameObject BubbleA = item.bubbleA;
+			GameObject BubbleB = item.bubbleB;
+
+
+			//create list of kinect bodies
+			List<Body> trackedIDs = new List<Body>();
+			foreach (Body body in bodies)
+			{
+				if (body == null)
+				{
+					continue;
+				}
+				if (body.IsTracked)
+				{
+					trackedIDs.Add(body);
+				}
+			}
+
+			//Get Kinect objects of Bubble A and Bubble B
+			for (int i = 0; i < trackedIDs.Count; i++)
+			{
+				if (Convert.ToInt32(trackedIDs[i].TrackingId) == Int32.Parse(BubbleA.name))
+				{
+					KinectA = trackedIDs[i];
+				}
+			}
+
+			for (int i = 0; i < trackedIDs.Count; i++)
+			{
+				if (Convert.ToInt32(trackedIDs[i].TrackingId) == Int32.Parse(BubbleB.name))
+				{
+					KinectB = trackedIDs[i];
+				}
+			}
+
+			//Get Hand and shoulder of Bubble A and Bubble B
+			Windows.Kinect.Joint KinectA_Hand = KinectA.Joints[JointType.HandRight];
+			Windows.Kinect.Joint KinectB_Hand = KinectB.Joints[JointType.HandRight];
+			Windows.Kinect.Joint KinectB_Shoulder = KinectB.Joints[JointType.ShoulderRight];
+			Windows.Kinect.Joint KinectA_Shoulder = KinectA.Joints[JointType.ShoulderRight];
+
+			bool highfiveDetected = false;
+			//Check if they are highfiving
+			if(KinectA_Hand.Position.Y > KinectA_Shoulder.Position.Y
+				&& KinectB_Hand.Position.Y > KinectB_Shoulder.Position.Y
+				&& ObjectDistanceKinectJoint(KinectA_Hand, KinectB_Hand) < 0.1f) {
+				highfiveDetected = true;
+			}
+
+			//if highfiving do something (loop through list of different shapes)
+			if (highfiveDetected) {
+				
+				//MICHAEL DO SOMETHING HERE
+			}
+
+		}
+	} // End checkHighFive
+
+	private float ObjectDistanceKinectJoint(Windows.Kinect.Joint JointA, Windows.Kinect.Joint JointB)
+	{
+		float a; //Higher Number
+		float b;
+
+		//Put Higher x axis in a
+		if (JointA.Position.X > JointB.Position.X)
+		{
+			a = JointA.Position.X;
+			b = JointB.Position.X;
+		}
+		else
+		{
+			b = JointA.Position.X;
+			a = JointB.Position.X;
+		}
+		return (a - b);
+	}
+
+
 	void OnApplicationQuit ()
 	{
 		if (bodyReader != null) {
@@ -384,90 +475,6 @@ public class Kinect2 : MonoBehaviour
 
 
 
-    public void checkHighFive()
-    {
-        //Check through BigBubs to see if they are high fiving
-        for (int k = 0; k < bigBubsCreated.Count; k++)
-        {
-            //Get each bubble from big bubble
-            hasSmallBubbles item = bigBubsCreated[k].GetComponent<hasSmallBubbles>();
-            GameObject BubbleA = item.bubbleA;
-            GameObject BubbleB = item.bubbleB;
-            Body KinectA;
-            Body KinectB;
-
-            //create list of kinect bodies
-            List<Body> trackedIDs = new List<Body>();
-            foreach (Body body in bodies)
-            {
-                if (body == null)
-                {
-                    continue;
-                }
-                if (body.IsTracked)
-                {
-                    trackedIDs.Add(body);
-                }
-            }
-
-            //Get Kinect objects of Bubble A and Bubble B
-            for (int i = 0; i < trackedIDs.Count; i++)
-            {
-                if (Convert.ToInt32(trackedIDs[i].TrackingId) == Int32.Parse(BubbleA.name))
-                {
-                    KinectA = trackedIDs[i];
-                }
-            }
-
-            for (int i = 0; i < trackedIDs.Count; i++)
-            {
-                if (Convert.ToInt32(trackedIDs[i].TrackingId) == Int32.Parse(BubbleB.name))
-                {
-                    KinectB = trackedIDs[i];
-                }
-            }
-
-            //Get Hand and shoulder of Bubble A and Bubble B
-            Windows.Kinect.Joint KinectA_Hand = KinectA.Joints[JointType.HandRight];
-            Windows.Kinect.Joint KinectB_Hand = KinectB.Joints[JointType.HandRight];
-            Windows.Kinect.Joint KinectB_Shoulder = KinectB.Joints[JointType.ShoulderRight];
-            Windows.Kinect.Joint KinectA_Shoulder = KinectA.Joints[JointType.ShoulderRight];
-
-            bool highfiveDetected = false;
-            //Check if they are highfiving
-            if(KinectA_Hand.Position.Y > KinectA_Shoulder.Position.Y
-                && KinectB_Hand.Position.Y > KinectB_Shoulder.Position.Y
-                && ObjectDistanceKinectJoint(KinectA_Hand, KinectB_Hand) < 0.1f) {
-                highfiveDetected = true;
-            }
-
-            //if highfiving do something (loop through list of different shapes)
-            if (highfiveDetected) {
-                Debug.Log('high five detected');
-                //MICHAEL DO SOMETHING HERE
-            }
-
-        }
-    } // End checkHighFive
-
-    private float ObjectDistanceKinectJoint(Windows.Kinect.Joint JointA, Windows.Kinect.Joint JointB)
-    {
-        float a; //Higher Number
-        float b;
-
-        //Put Higher x axis in a
-        if (JointA.Position.X > JointB.Position.X)
-        {
-            a = JointA.Position.X;
-            b = JointB.Position.X;
-        }
-        else
-        {
-            b = JointA.Position.X;
-            a = JointB.Position.X;
-        }
-        return (a - b);
-    }
 }
 
 // Component to give big bubble context 

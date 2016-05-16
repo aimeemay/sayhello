@@ -418,7 +418,6 @@ namespace Windows.Kinect
 
     public sealed partial class KinectSensor
     {
-        public static object KinectSensor { get; set; }
 
         private void Dispose(bool disposing)
         {
