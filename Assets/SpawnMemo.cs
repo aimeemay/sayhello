@@ -28,6 +28,6 @@ public class SpawnMemo : MonoBehaviour {
 
     void SetFactText()
     {
-        funFacto.text = "Oreo's are more addictive compared to coke";
+        funFacto.text = "Oreo's are more addictive than coke";
     }
 }

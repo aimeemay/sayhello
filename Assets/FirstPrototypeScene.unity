@@ -180,9 +180,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 2068769718}
   m_RootOrder: 0
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 192, y: 0}
   m_SizeDelta: {x: 91.899994, y: 100}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &470145493
@@ -412,11 +412,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 491482, guid: a370f02624781464eaaac2d83b528187, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -1.27
+      value: 0.93
       objectReference: {fileID: 0}
     - target: {fileID: 491482, guid: a370f02624781464eaaac2d83b528187, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0.08
+      value: -0.7
       objectReference: {fileID: 0}
     - target: {fileID: 491482, guid: a370f02624781464eaaac2d83b528187, type: 2}
       propertyPath: m_LocalPosition.z
@@ -625,6 +625,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPlaceholder: {fileID: 140352, guid: e17ccb9573c9bbb4e9cb9ca6405df4ac, type: 2}
   biggerBubble: {fileID: 159720, guid: 67326898fdf0b724f87dfe7e2b736690, type: 2}
+  star: {fileID: 173098, guid: a7a59dd00ccf06a468212e335b9714e1, type: 2}
+  sprites:
+  - {fileID: 21300000, guid: 3f396f54e90efb34faaea4b48bbe072f, type: 3}
+  - {fileID: 21300000, guid: 7594f266ed5f9c148a0902a172ab2d23, type: 3}
+  - {fileID: 21300000, guid: e98e994edb2998d4e9765cd1f18c5f3f, type: 3}
+  - {fileID: 21300000, guid: 5e1074f2d7c61ac41bae87f3d94f027c, type: 3}
   bubblesInGame: []
 --- !u!1 &1851473384
 GameObject:

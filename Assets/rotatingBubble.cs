@@ -8,7 +8,7 @@ public class rotatingBubble : MonoBehaviour {
     
 	// Use this for initialization
 	void Start () {
-	
+		seconds = Mathf.FloorToInt(Time.time);
 	}
 	
 	// Update is called once per frame
@@ -18,9 +18,10 @@ public class rotatingBubble : MonoBehaviour {
 	}
 
      private void bubbleColorChanger(){
-        seconds = Mathf.FloorToInt(Time.time);
-        if (seconds >= 9 && seconds <= 9.1){
-            tenSecondColor = Color.Lerp(Color.red, Color.blue, Mathf.PingPong(Time.time, 1));
+        
+
+		if (Time.time - seconds >= 5 && Time.time - seconds <= 6){
+            tenSecondColor = Color.Lerp(Color.red, Color.blue, Mathf.PingPong(Time.time, 3));
             Renderer renderer = this.GetComponent<Renderer>();
             renderer.material.color = tenSecondColor;
             this.transform.localScale += new Vector3(0.005f, 0.005f, 0);

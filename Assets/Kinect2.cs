@@ -18,6 +18,8 @@ public class Kinect2 : MonoBehaviour
 	private GameObject BiggestBubble;
 	private float xvalues;
 	private float yvalues;
+	public GameObject star;
+	public Sprite[] sprites;
 
 
 	//List Of bubbles In the game.
@@ -43,6 +45,8 @@ public class Kinect2 : MonoBehaviour
 			dictionaryConverter ();
 			//Calculates distance between two pairs, can do this for multiple pairs. 
 			distanceStuff ();
+			//Check if high fiving
+			checkHighFive();
 			//Clears the dead bubbles from game if the bubbles(people are not in game anymore)
 			clearDeadBubbles ();
 		}
@@ -128,7 +132,10 @@ public class Kinect2 : MonoBehaviour
 		GameObject person = (GameObject)Instantiate (playerPlaceholder, new Vector3 (0f, 0f, 0f), Quaternion.identity);
 		person.name = id.ToString ();
 		Renderer renderer = person.GetComponent<Renderer>();
-		renderer.material.color = new Color (Random.Range (0f, 1f), Random.Range (0f, 1f), Random.Range (0f, 1f));
+		//renderer.material.color = new Color (Random.Range (0f, 1f), Random.Range (0f, 1f), Random.Range (0f, 1f));
+		Color personColor = new Color (Random.Range (0f, 1f), Random.Range (0f, 1f), Random.Range (0f, 1f));
+		renderer.material.SetColor ("_EmissionColor", personColor);
+
 		return person;
 	}
 
@@ -144,6 +151,7 @@ public class Kinect2 : MonoBehaviour
 		//giving bubble context
 		BiggestBubble.AddComponent<hasSmallBubbles>();
 		hasSmallBubbles item = BiggestBubble.GetComponent<hasSmallBubbles>();
+		item.spriteNum = 0;
 		item.bubbleA = bubbleA;
 		item.bubbleB = bubbleB;
 		item.pair = pair;
@@ -402,7 +410,7 @@ public class Kinect2 : MonoBehaviour
 			//Get Kinect objects of Bubble A and Bubble B
 			for (int i = 0; i < trackedIDs.Count; i++)
 			{
-				if (Convert.ToInt32(trackedIDs[i].TrackingId) == Int32.Parse(BubbleA.name))
+				if (Convert.ToInt64(trackedIDs[i].TrackingId) == Int64.Parse(BubbleA.name))
 				{
 					KinectA = trackedIDs[i];
 				}
@@ -410,7 +418,7 @@ public class Kinect2 : MonoBehaviour
 
 			for (int i = 0; i < trackedIDs.Count; i++)
 			{
-				if (Convert.ToInt32(trackedIDs[i].TrackingId) == Int32.Parse(BubbleB.name))
+				if (Convert.ToInt64(trackedIDs[i].TrackingId) == Int64.Parse(BubbleB.name))
 				{
 					KinectB = trackedIDs[i];
 				}
@@ -432,8 +440,22 @@ public class Kinect2 : MonoBehaviour
 
 			//if highfiving do something (loop through list of different shapes)
 			if (highfiveDetected) {
-				
-				//MICHAEL DO SOMETHING HERE
+				//GameObject person = (GameObject)Instantiate (star, new Vector3 (0f, 0f, 0f), Quaternion.identity);
+
+				//What is the current sprite
+				if (bigBubsCreated [k].GetComponent<hasSmallBubbles> ().delay < 0) {
+					if (bigBubsCreated [k].GetComponent<hasSmallBubbles> ().spriteNum == sprites.Length - 1) {
+						bigBubsCreated [k].GetComponent<SpriteRenderer> ().sprite = sprites [0];
+						bigBubsCreated [k].GetComponent<hasSmallBubbles> ().spriteNum = 0;
+					} else {
+						bigBubsCreated [k].GetComponent<hasSmallBubbles> ().spriteNum++;
+						int changeme = bigBubsCreated [k].GetComponent<hasSmallBubbles> ().spriteNum;
+						bigBubsCreated [k].GetComponent<SpriteRenderer> ().sprite = sprites [changeme];
+					}
+
+					bigBubsCreated [k].GetComponent<hasSmallBubbles> ().delay = 0.5f;
+				}
+
 			}
 
 		}
@@ -482,4 +504,12 @@ public class hasSmallBubbles : MonoBehaviour {
 	public GameObject bubbleA;
 	public GameObject bubbleB;
 	public IntPair pair;
+	public int spriteNum;
+	public float delay = 0.5f;
+
+	void Update(){
+		if (delay > 0) {
+			delay -= Time.deltaTime;
+		}
+	}
 }
