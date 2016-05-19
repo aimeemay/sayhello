@@ -426,15 +426,22 @@ public class Kinect2 : MonoBehaviour
 
 			//Get Hand and shoulder of Bubble A and Bubble B
 			Windows.Kinect.Joint KinectA_Hand = KinectA.Joints[JointType.HandRight];
+            Windows.Kinect.Joint KinectA_LeftHand = KinectA.Joints[JointType.HandLeft];
 			Windows.Kinect.Joint KinectB_Hand = KinectB.Joints[JointType.HandRight];
-			Windows.Kinect.Joint KinectB_Shoulder = KinectB.Joints[JointType.ShoulderRight];
+            Windows.Kinect.Joint KinectB_LeftHand = KinectB.Joints[JointType.HandLeft];
+            Windows.Kinect.Joint KinectB_Shoulder = KinectB.Joints[JointType.ShoulderRight];
 			Windows.Kinect.Joint KinectA_Shoulder = KinectA.Joints[JointType.ShoulderRight];
 
 			bool highfiveDetected = false;
 			//Check if they are highfiving
-			if(KinectA_Hand.Position.Y > KinectA_Shoulder.Position.Y
-				&& KinectB_Hand.Position.Y > KinectB_Shoulder.Position.Y
-				&& ObjectDistanceKinectJoint(KinectA_Hand, KinectB_Hand) < 0.1f) {
+			if((KinectA_Hand.Position.Y > KinectA_Shoulder.Position.Y 
+                || KinectA_LeftHand.Position.Y > KinectA_Shoulder.Position.Y )
+                && (KinectB_Hand.Position.Y > KinectB_Shoulder.Position.Y 
+                || KinectB_LeftHand.Position.Y > KinectB_Shoulder.Position.Y)
+				&& (ObjectDistanceKinectJoint(KinectA_Hand, KinectB_Hand) < 0.1f
+                || ObjectDistanceKinectJoint(KinectA_Hand, KinectB_LeftHand) < 0.1f
+                || ObjectDistanceKinectJoint(KinectA_LeftHand, KinectB_Hand) < 0.1f
+                || ObjectDistanceKinectJoint(KinectA_LeftHand, KinectB_LeftHand) < 0.1f)) {
 				highfiveDetected = true;
 			}
 
@@ -461,6 +468,8 @@ public class Kinect2 : MonoBehaviour
 		}
 	} // End checkHighFive
 
+
+    //Check Distance between two joints
 	private float ObjectDistanceKinectJoint(Windows.Kinect.Joint JointA, Windows.Kinect.Joint JointB)
 	{
 		float a; //Higher Number
@@ -479,7 +488,9 @@ public class Kinect2 : MonoBehaviour
 		}
 		return (a - b);
 	}
+    //End ObjectDistanceKinectJoint
 
+    
 
 	void OnApplicationQuit ()
 	{
