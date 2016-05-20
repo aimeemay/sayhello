@@ -270,15 +270,22 @@ public class Kinect2 : MonoBehaviour
 						//remove smaller bubbles
 						bubbleA.GetComponent<SpriteRenderer> ().enabled = false;
 						bubbleB.GetComponent<SpriteRenderer> ().enabled = false;
+						for (int p = 0; p < 6; p++)
+						{
+							LineRenderer lrA = bubbleA.transform.GetChild(p).GetComponent<LineRenderer>();
+							lrA.enabled = false;
+							LineRenderer lrB = bubbleB.transform.GetChild(p).GetComponent<LineRenderer>();
+							lrB.enabled = false;
+
+						}
 					}
 				}
 
 			} else {
                 
 
-
+				//Destroy Big Bubble
 				bool isEmpty = !bigBubsCreated.Any ();
-				//If Big Bubbles exist, 
 				if (!isEmpty) {
 					for (int t = 0; t < bigBubsCreated.Count; t++) {
 
@@ -305,9 +312,19 @@ public class Kinect2 : MonoBehaviour
 						}
 					}
 				}
+				//Draw line between pair if small bubbles not already in a big bubble #nolinesluts
+				bool bubblesCanLine = true;
+				for (int p = 0; p < activatedSmlBubs.Count; p++)
+					if (bubbleA == activatedSmlBubs [p]
+						|| bubbleB == activatedSmlBubs [p]) {
+						bubblesCanLine = false;
+					}
 
-                //Draw line between pair
-                drawLineRenderer(pair);
+				if(bubblesCanLine) {
+					drawLineRenderer(pair);
+
+				}
+                
             }
 		}
 	}
@@ -351,33 +368,7 @@ public class Kinect2 : MonoBehaviour
 				t--;
 			}
 
-			//Debug.Log (bubbleA + " " + bubbleB);
 
-//			bool smlBubsHasDisappeared = true;
-//			//if we can find both small bubbles, then don't destroy the big bubble
-//			for (int k = 0; k < bubblesInGame.Count; k++) {
-//				if (bubblesInGame[k] == bubbleA) {
-//					//Debug.Log ("found the 1st bubble");
-//					for (int n = 0; n < bubblesInGame.Count; n++) {
-//						if (bubblesInGame[n] == bubbleB) {
-//							//Debug.Log ("found the 2nd bubble");
-//							smlBubsHasDisappeared = false;
-//
-//						}
-//					}
-//				}
-//			}
-//
-//			if (smlBubsHasDisappeared) {
-//				//Debug.Log ("destroying the big bubble");
-//				//Destory Big Bubble
-//				Destroy(bigBubsCreated[t]);
-//
-//				//Remove things from activated arrays
-//				bigBubsCreated.Remove(bigBubsCreated[t]);
-//				activatedSmlBubs.Remove(bubbleA);
-//				activatedSmlBubs.Remove(bubbleB);
-//			}
 		}
 	}
 
@@ -512,6 +503,8 @@ public class Kinect2 : MonoBehaviour
         int pairFirstDigit = pair.firstDigit;
         int pairSecondDigit = pair.secondDigit;
 
+		Debug.Log (pairFirstDigit + " Second Digit " + pairSecondDigit);
+
         //transform pair integers to gameObjects
         GameObject bubbleA = bubblesInGame[pairFirstDigit];
         GameObject bubbleB = bubblesInGame[pairSecondDigit];
@@ -527,12 +520,14 @@ public class Kinect2 : MonoBehaviour
         float distance;
         //Speed of drawing the line. 
         float lineDrawSpeed = 2f;
-        Debug.Log("bubbleA.transform.GetChild(pairFirstDigit-1) " + pairFirstDigit);
-        Debug.Log("bubbleB.transform.GetChild(pairSecondDigit-1) " + pairSecondDigit);
+		//Debug.Log("bubbleA.transform.GetChild(pairFirstDigit-1) " + pairFirstDigit);
+        //Debug.Log("bubbleB.transform.GetChild(pairSecondDigit-1) " + pairSecondDigit);
         
         //Sets the line renderer for personA and personB
         lineRendererA = bubbleA.transform.GetChild(pairFirstDigit).GetComponent<LineRenderer>();
         lineRendererB = bubbleB.transform.GetChild(pairSecondDigit).GetComponent<LineRenderer>();
+
+		//Debug.Log ("bubbleA child received " + bubbleA.transform.GetChild (pairFirstDigit));
 
         //Sets the starting position of the lineRenderer for PersonA and PersonB
         lineRendererA.SetPosition(0, new Vector3( bubbleA.transform.position.x, bubbleA.transform.position.y, -5f));
@@ -579,6 +574,10 @@ public class Kinect2 : MonoBehaviour
 
     }
     //End drawLineRenderer
+
+
+
+
 
     private void clearLines()
     {
