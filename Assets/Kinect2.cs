@@ -43,12 +43,15 @@ public class Kinect2 : MonoBehaviour
 			UpdateKinect ();
 			//Converts the dictionary of people into list for detecting bubbles in game
 			dictionaryConverter ();
-			//Calculates distance between two pairs, can do this for multiple pairs. 
-			distanceStuff ();
-			//Check if high fiving
-			checkHighFive();
-			//Clears the dead bubbles from game if the bubbles(people are not in game anymore)
-			clearDeadBubbles ();
+            //Clear Lines
+            clearLines();
+            //Calculates distance between two pairs, can do this for multiple pairs. 
+            distanceStuff ();
+            //Clears the dead bubbles from game if the bubbles(people are not in game anymore)
+            clearDeadBubbles();
+            //Check if high fiving
+            checkHighFive();
+			
 		}
 	}
 
@@ -225,8 +228,9 @@ public class Kinect2 : MonoBehaviour
 			if (distab <= 0.9f) {
 
                 //Disables GameObject childs for lineRenderer
-                bubbleA.transform.GetChild(pairFirstDigit).GetComponent<SpriteRenderer>().enabled = false;
-                bubbleB.transform.GetChild(pairSecondDigit).GetComponent<SpriteRenderer>().enabled = false;
+                //bubbleA.transform.GetChild(pairFirstDigit).GetComponent<SpriteRenderer>().enabled = false;
+                //bubbleB.transform.GetChild(pairSecondDigit).GetComponent<SpriteRenderer>().enabled = false;
+
 
                 //check if already activated small bubbles
                 bool alreadyPaired = false;
@@ -270,8 +274,7 @@ public class Kinect2 : MonoBehaviour
 				}
 
 			} else {
-                //Draw line between pair
-                drawLineRenderer(pair);
+                
 
 
 				bool isEmpty = !bigBubsCreated.Any ();
@@ -302,7 +305,10 @@ public class Kinect2 : MonoBehaviour
 						}
 					}
 				}
-			}
+
+                //Draw line between pair
+                drawLineRenderer(pair);
+            }
 		}
 	}
 
@@ -513,33 +519,36 @@ public class Kinect2 : MonoBehaviour
         //LineRenderers for personA and personB
         LineRenderer lineRendererA;
         LineRenderer lineRendererB;
+
+        
         //Counts where the line is in relation to its end point
         float counter = 0f;
         //Calculates distance of line
         float distance;
         //Speed of drawing the line. 
-        float lineDrawSpeed = 6f;
-
-        //Enables GameObject childs
-        bubbleA.transform.GetChild(pairFirstDigit).GetComponent<SpriteRenderer>().enabled = true;
-        bubbleB.transform.GetChild(pairSecondDigit).GetComponent<SpriteRenderer>().enabled = true;
-
+        float lineDrawSpeed = 2f;
+        Debug.Log("bubbleA.transform.GetChild(pairFirstDigit-1) " + pairFirstDigit);
+        Debug.Log("bubbleB.transform.GetChild(pairSecondDigit-1) " + pairSecondDigit);
+        
         //Sets the line renderer for personA and personB
         lineRendererA = bubbleA.transform.GetChild(pairFirstDigit).GetComponent<LineRenderer>();
         lineRendererB = bubbleB.transform.GetChild(pairSecondDigit).GetComponent<LineRenderer>();
 
         //Sets the starting position of the lineRenderer for PersonA and PersonB
-        lineRendererA.SetPosition(0, bubbleA.transform.position);
-        lineRendererB.SetPosition(0, bubbleB.transform.position);
+        lineRendererA.SetPosition(0, new Vector3( bubbleA.transform.position.x, bubbleA.transform.position.y, -5f));
+        lineRendererB.SetPosition(0, new Vector3(bubbleB.transform.position.x, bubbleB.transform.position.y, -5f));
 
-        lineRendererA.SetWidth(.5f, .5f);
-        lineRendererB.SetWidth(.5f, .5f);
+        lineRendererA.SetWidth(.05f, .02f);
+        lineRendererB.SetWidth(.05f, .02f);
+
+        lineRendererA.sortingOrder = -5;
+        lineRendererB.sortingOrder = -5;
 
         distance = objectDistance(bubbleA, bubbleB);
 
         if(counter < (distance / 2))
             {
-            counter += .1f / lineDrawSpeed;
+            counter += 1f / lineDrawSpeed;
             float x = Mathf.Lerp(0, distance, counter);
 
             float firstPosx = (bubbleA.transform.position.x);
@@ -555,18 +564,33 @@ public class Kinect2 : MonoBehaviour
             Vector3 midPoint = new Vector3(xvalues, yvalues);
 
             Vector3 pointAlongLineA = x * Vector3.Normalize(midPoint - startA) + startA;
+            pointAlongLineA.z = -5f;
             Vector3 pointAlongLineB = x * Vector3.Normalize(midPoint - startB) + startB;
+            pointAlongLineB.z = -5f;
 
             //set end position of line
             lineRendererA.SetPosition(1, pointAlongLineA);
             lineRendererB.SetPosition(1, pointAlongLineB);
 
-            
+            lineRendererA.enabled = true;
+            lineRendererB.enabled = true;
 
         }
 
     }
     //End drawLineRenderer
+
+    private void clearLines()
+    {
+        for(int i = 0; i<bubblesInGame.Count; i++)
+        {
+            for (int k = 0; k < 6; k++)
+            {
+                LineRenderer lr = bubblesInGame[i].transform.GetChild(k).GetComponent<LineRenderer>();
+                lr.enabled = false;
+            }
+        }
+    }
 
 
 
