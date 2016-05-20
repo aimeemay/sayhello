@@ -224,8 +224,12 @@ public class Kinect2 : MonoBehaviour
 			//if distance is close enough(simulated collision)
 			if (distab <= 0.9f) {
 
-				//check if already activated small bubbles
-				bool alreadyPaired = false;
+                //Disables GameObject childs for lineRenderer
+                bubbleA.transform.GetChild(pairFirstDigit).GetComponent<SpriteRenderer>().enabled = false;
+                bubbleB.transform.GetChild(pairSecondDigit).GetComponent<SpriteRenderer>().enabled = false;
+
+                //check if already activated small bubbles
+                bool alreadyPaired = false;
 				for (int t = 0; t < activatedSmlBubs.Count; t++) {
 
 					if (activatedSmlBubs[t] == bubbleA
@@ -266,6 +270,10 @@ public class Kinect2 : MonoBehaviour
 				}
 
 			} else {
+                //Draw line between pair
+                drawLineRenderer(pair);
+
+
 				bool isEmpty = !bigBubsCreated.Any ();
 				//If Big Bubbles exist, 
 				if (!isEmpty) {
@@ -490,7 +498,77 @@ public class Kinect2 : MonoBehaviour
 	}
     //End ObjectDistanceKinectJoint
 
-    
+
+    //Draw Line between two people
+    public void drawLineRenderer(IntPair pair)
+    {
+        //get possible pair integers
+        int pairFirstDigit = pair.firstDigit;
+        int pairSecondDigit = pair.secondDigit;
+
+        //transform pair integers to gameObjects
+        GameObject bubbleA = bubblesInGame[pairFirstDigit];
+        GameObject bubbleB = bubblesInGame[pairSecondDigit];
+
+        //LineRenderers for personA and personB
+        LineRenderer lineRendererA;
+        LineRenderer lineRendererB;
+        //Counts where the line is in relation to its end point
+        float counter = 0f;
+        //Calculates distance of line
+        float distance;
+        //Speed of drawing the line. 
+        float lineDrawSpeed = 6f;
+
+        //Enables GameObject childs
+        bubbleA.transform.GetChild(pairFirstDigit).GetComponent<SpriteRenderer>().enabled = true;
+        bubbleB.transform.GetChild(pairSecondDigit).GetComponent<SpriteRenderer>().enabled = true;
+
+        //Sets the line renderer for personA and personB
+        lineRendererA = bubbleA.transform.GetChild(pairFirstDigit).GetComponent<LineRenderer>();
+        lineRendererB = bubbleB.transform.GetChild(pairSecondDigit).GetComponent<LineRenderer>();
+
+        //Sets the starting position of the lineRenderer for PersonA and PersonB
+        lineRendererA.SetPosition(0, bubbleA.transform.position);
+        lineRendererB.SetPosition(0, bubbleB.transform.position);
+
+        lineRendererA.SetWidth(.5f, .5f);
+        lineRendererB.SetWidth(.5f, .5f);
+
+        distance = objectDistance(bubbleA, bubbleB);
+
+        if(counter < (distance / 2))
+            {
+            counter += .1f / lineDrawSpeed;
+            float x = Mathf.Lerp(0, distance, counter);
+
+            float firstPosx = (bubbleA.transform.position.x);
+            float secondPosx = (bubbleB.transform.position.x);
+            float firstPosy = (bubbleA.transform.position.y);
+            float secondPosy = (bubbleB.transform.position.y);
+
+            xvalues = ((firstPosx + secondPosx) / 2f);
+            yvalues = ((firstPosy + secondPosy) / 2f);
+
+            Vector3 startA = bubbleA.transform.position;
+            Vector3 startB = bubbleB.transform.position;
+            Vector3 midPoint = new Vector3(xvalues, yvalues);
+
+            Vector3 pointAlongLineA = x * Vector3.Normalize(midPoint - startA) + startA;
+            Vector3 pointAlongLineB = x * Vector3.Normalize(midPoint - startB) + startB;
+
+            //set end position of line
+            lineRendererA.SetPosition(1, pointAlongLineA);
+            lineRendererB.SetPosition(1, pointAlongLineB);
+
+            
+
+        }
+
+    }
+    //End drawLineRenderer
+
+
 
 	void OnApplicationQuit ()
 	{
