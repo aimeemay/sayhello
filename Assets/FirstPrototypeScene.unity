@@ -309,6 +309,7 @@ Transform:
   m_LocalScale: {x: 1.050625, y: 1, z: 1}
   m_Children:
   - {fileID: 1508179846}
+  - {fileID: 90333240}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!1 &637334222
@@ -339,7 +340,7 @@ SpriteRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 2100000, guid: 7cb425b6b649a5741ba8e01fe16fcba5, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0

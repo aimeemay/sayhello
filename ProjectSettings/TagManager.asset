@@ -44,3 +44,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: background
+    uniqueID: 2465064803
+    locked: 0
+  - name: lines
+    uniqueID: 411872151
+    locked: 0
+  - name: bubbles
+    uniqueID: 1551217105
+    locked: 0

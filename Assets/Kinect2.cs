@@ -524,8 +524,8 @@ public class Kinect2 : MonoBehaviour
         //Debug.Log("bubbleB.transform.GetChild(pairSecondDigit-1) " + pairSecondDigit);
         
         //Sets the line renderer for personA and personB
-        lineRendererA = bubbleA.transform.GetChild(pairFirstDigit).GetComponent<LineRenderer>();
-        lineRendererB = bubbleB.transform.GetChild(pairSecondDigit).GetComponent<LineRenderer>();
+        lineRendererA = bubbleA.transform.GetChild(pairSecondDigit).GetComponent<LineRenderer>();
+        lineRendererB = bubbleB.transform.GetChild(pairFirstDigit).GetComponent<LineRenderer>();
 
 		//Debug.Log ("bubbleA child received " + bubbleA.transform.GetChild (pairFirstDigit));
 
