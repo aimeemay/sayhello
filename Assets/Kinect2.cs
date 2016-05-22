@@ -18,7 +18,6 @@ public class Kinect2 : MonoBehaviour
 	private GameObject BiggestBubble;
 	private float xvalues;
 	private float yvalues;
-	public GameObject star;
 	public Sprite[] sprites;
 
 
@@ -158,8 +157,6 @@ public class Kinect2 : MonoBehaviour
 		item.bubbleA = bubbleA;
 		item.bubbleB = bubbleB;
 		item.pair = pair;
-
-		Renderer renderer = BiggestBubble.GetComponent<Renderer> ();
 		bigBubsCreated.Add(BiggestBubble);
 		return BiggestBubble;
 	}
