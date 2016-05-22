@@ -134,9 +134,7 @@ public class Kinect2 : MonoBehaviour
 		GameObject person = (GameObject)Instantiate (playerPlaceholder, new Vector3 (0f, 0f, 0f), Quaternion.identity);
 		person.name = id.ToString ();
 		Renderer renderer = person.GetComponent<Renderer>();
-		//renderer.material.color = new Color (Random.Range (0f, 1f), Random.Range (0f, 1f), Random.Range (0f, 1f));
-		Color personColor = new Color (Random.Range (0f, 1f), Random.Range (0f, 1f), Random.Range (0f, 1f));
-		renderer.material.SetColor ("_EmissionColor", personColor);
+		renderer.material.color = new Color (Random.Range (0f, 1f), Random.Range (0f, 1f), Random.Range (0f, 1f));
 
 		return person;
 	}
@@ -157,7 +155,7 @@ public class Kinect2 : MonoBehaviour
 		item.bubbleA = bubbleA;
 		item.bubbleB = bubbleB;
 		item.pair = pair;
-		bigBubsCreated.Add(BiggestBubble);
+        bigBubsCreated.Add(BiggestBubble);
 		return BiggestBubble;
 	}
 
@@ -262,7 +260,6 @@ public class Kinect2 : MonoBehaviour
 						//add smaller bubbles to activatedSmBubs
 						activatedSmlBubs.Add (bubbleA);
 						activatedSmlBubs.Add (bubbleB);
-						Debug.Log (activatedSmlBubs);
 
 						//remove smaller bubbles
 						bubbleA.GetComponent<SpriteRenderer> ().enabled = false;
@@ -304,7 +301,7 @@ public class Kinect2 : MonoBehaviour
 							//Show small bubbles again
 							bubbleA.GetComponent<SpriteRenderer>().enabled = true;
 							bubbleB.GetComponent<SpriteRenderer>().enabled = true;
-							Debug.Log (activatedSmlBubs);
+							
 
 						}
 					}
@@ -335,15 +332,7 @@ public class Kinect2 : MonoBehaviour
 			GameObject bubbleB;
 
 			bubbleA = item.bubbleA;
-			bubbleB = item.bubbleB;
-			
-
-			//GameObject bubbleA = item.bubbleA;
-			Debug.Log (bubbleA);
-			Debug.Log (bubbleB);
-
-			//GameObject bubbleB = item.bubbleB;
-			//Debug.Log (bubbleB);
+            bubbleB = item.bubbleB;
 
 			if ((bubbleA == null) || (bubbleB == null)) {
 				//Destory Big Bubble
@@ -493,14 +482,17 @@ public class Kinect2 : MonoBehaviour
     //End ObjectDistanceKinectJoint
 
 
+    //Counts where the line is in relation to its end point
+    public float counter = 0f;
+
+
+
     //Draw Line between two people
     public void drawLineRenderer(IntPair pair)
     {
         //get possible pair integers
         int pairFirstDigit = pair.firstDigit;
         int pairSecondDigit = pair.secondDigit;
-
-		Debug.Log (pairFirstDigit + " Second Digit " + pairSecondDigit);
 
         //transform pair integers to gameObjects
         GameObject bubbleA = bubblesInGame[pairFirstDigit];
@@ -511,20 +503,15 @@ public class Kinect2 : MonoBehaviour
         LineRenderer lineRendererB;
 
         
-        //Counts where the line is in relation to its end point
-        float counter = 0f;
+        
         //Calculates distance of line
         float distance;
         //Speed of drawing the line. 
-        float lineDrawSpeed = 2f;
-		//Debug.Log("bubbleA.transform.GetChild(pairFirstDigit-1) " + pairFirstDigit);
-        //Debug.Log("bubbleB.transform.GetChild(pairSecondDigit-1) " + pairSecondDigit);
+        float lineDrawSpeed = 4f;
         
         //Sets the line renderer for personA and personB
         lineRendererA = bubbleA.transform.GetChild(pairSecondDigit).GetComponent<LineRenderer>();
         lineRendererB = bubbleB.transform.GetChild(pairFirstDigit).GetComponent<LineRenderer>();
-
-		//Debug.Log ("bubbleA child received " + bubbleA.transform.GetChild (pairFirstDigit));
 
         //Sets the starting position of the lineRenderer for PersonA and PersonB
         lineRendererA.SetPosition(0, new Vector3( bubbleA.transform.position.x, bubbleA.transform.position.y, -5f));
@@ -536,11 +523,11 @@ public class Kinect2 : MonoBehaviour
         lineRendererA.sortingOrder = -5;
         lineRendererB.sortingOrder = -5;
 
-        distance = objectDistance(bubbleA, bubbleB);
+        distance = (objectDistance(bubbleA, bubbleB)/2);
 
-        if(counter < (distance / 2))
+        if(counter < (distance))
             {
-            counter += 1f / lineDrawSpeed;
+            counter += .1f / lineDrawSpeed;
             float x = Mathf.Lerp(0, distance, counter);
 
             float firstPosx = (bubbleA.transform.position.x);
@@ -567,6 +554,14 @@ public class Kinect2 : MonoBehaviour
             lineRendererA.enabled = true;
             lineRendererB.enabled = true;
 
+        }
+        else
+        {
+            lineRendererA.SetPosition(1, new Vector3(xvalues, yvalues, -5f));
+            lineRendererB.SetPosition(1, new Vector3(xvalues, yvalues, -5f));
+
+            lineRendererA.enabled = true;
+            lineRendererB.enabled = true;
         }
 
     }
