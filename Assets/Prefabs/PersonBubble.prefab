@@ -75,7 +75,7 @@ GameObject:
   - 212: {fileID: 21265680}
   - 50: {fileID: 5094730}
   - 61: {fileID: 6142196}
-  - 114: {fileID: 11416876}
+  - 114: {fileID: 11456722}
   m_Layer: 0
   m_Name: PersonBubble
   m_TagString: bubbleCollider
@@ -124,6 +124,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 486630}
   m_RootOrder: 0
@@ -136,6 +137,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 486630}
   m_RootOrder: 3
@@ -148,6 +150,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 486630}
   m_RootOrder: 5
@@ -160,6 +163,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 486630}
   m_RootOrder: 1
@@ -172,6 +176,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 486630}
   m_RootOrder: 4
@@ -184,6 +189,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 486630}
   m_RootOrder: 2
@@ -196,6 +202,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.09996174, y: 0.09996174, z: 0.09996174}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 425042}
   - {fileID: 430704}
@@ -236,19 +243,27 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Size: {x: 10.58, y: 10.58}
---- !u!114 &11416876
+--- !u!114 &11456722
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 140352}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 195fab8a9b74c4745aa290c0fa609f33, type: 3}
+  m_Script: {fileID: 11500000, guid: 8d4e845ac71ec6d47b644a801e1ed319, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bubblePrefab: {fileID: 148612, guid: 957d355523c31a64faf180a779c21434, type: 2}
-  textCollide: {fileID: 175214, guid: 522cec54629eace488fa2900b24e7335, type: 2}
+  clips:
+  - {fileID: 8300000, guid: 97c5ea991636b614f93fbaaf0f396f95, type: 3}
+  - {fileID: 8300000, guid: a522628ff95fb0d4b9282e07413d500b, type: 3}
+  - {fileID: 8300000, guid: 2f7a1031fd5b639429a5d79e6e025dfd, type: 3}
+  - {fileID: 8300000, guid: eb91f4f077402be4a8b94178943b4c3f, type: 3}
+  - {fileID: 8300000, guid: 62ab9167aa68daf45ad3c89cabbaecd3, type: 3}
+  - {fileID: 8300000, guid: a0191c34032027a4ebb7820de6c69334, type: 3}
+  - {fileID: 8300000, guid: 4ba76dee39ff64e46963698244aa13f5, type: 3}
+  - {fileID: 8300000, guid: 9eabb22439a9ed14784d326cf7d3ca6a, type: 3}
+  - {fileID: 8300000, guid: 66e61b9dfc55805489b4ab74b434ee39, type: 3}
 --- !u!120 &12031932
 LineRenderer:
   m_ObjectHideFlags: 1

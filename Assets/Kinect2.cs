@@ -21,6 +21,9 @@ public class Kinect2 : MonoBehaviour
 	public Sprite[] sprites;
 
 
+
+
+
 	//List Of bubbles In the game.
 	public List<GameObject> bubblesInGame;
 
@@ -135,9 +138,10 @@ public class Kinect2 : MonoBehaviour
 		person.name = id.ToString ();
 		Renderer renderer = person.GetComponent<Renderer>();
 		renderer.material.color = new Color (Random.Range (0f, 1f), Random.Range (0f, 1f), Random.Range (0f, 1f));
-
+	
 		return person;
 	}
+		
 
 	//list of big bubbles that have been created in the game screen
 	List<GameObject> bigBubsCreated = new List<GameObject>();
@@ -507,7 +511,7 @@ public class Kinect2 : MonoBehaviour
         //Calculates distance of line
         float distance;
         //Speed of drawing the line. 
-        float lineDrawSpeed = 4f;
+        float lineDrawSpeed = 7f;
         
         //Sets the line renderer for personA and personB
         lineRendererA = bubbleA.transform.GetChild(pairSecondDigit).GetComponent<LineRenderer>();
