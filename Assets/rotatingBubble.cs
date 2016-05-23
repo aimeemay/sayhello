@@ -5,7 +5,7 @@ public class rotatingBubble : MonoBehaviour {
 	public float rotSpeed = 10f;
     public Color tenSecondColor = Color.red;
     private int seconds;
-    private float rate = 0.15f;
+    private float rate = 0.1f;
     private float ratio = 0.15f;
 	// Use this for initialization
 	void Start () {
@@ -26,8 +26,8 @@ public class rotatingBubble : MonoBehaviour {
             Renderer renderer = this.GetComponent<Renderer>();
             renderer.material.color = tenSecondColor;
             //this.transform.localScale += new Vector3(0.001f, 0.001f, 0);
-            this.transform.localScale = Mathf.PingPong(Time.time * rate, ratio) * Vector3.one;
-            rotSpeed += 0.5f;
+            this.transform.localScale = PingPong(Time.time * rate, ratio, 0.2f)* Vector3.one ;
+            rotSpeed += 0.2f;
         }if (Time.time - seconds > 10) {
             rotSpeed = 40f;
             //this.transform.localScale = new Vector3(0.15f, 0.15f, 0);
@@ -35,5 +35,10 @@ public class rotatingBubble : MonoBehaviour {
 
 		}
     }
+
+     float PingPong(float aValue, float aMin, float aMax)
+     {
+         return Mathf.PingPong(aValue, aMax - aMin) + aMin;
+     }
 
 }
