@@ -21,7 +21,8 @@ public class Kinect2 : MonoBehaviour
 	public Sprite[] sprites;
 
 	//Counts where the line is in relation to its end point
-	public float counter = 0f;
+	//public float counter = 0f;
+    //public float[][] counterArray;
 
 
 
@@ -49,7 +50,7 @@ public class Kinect2 : MonoBehaviour
             //Clear Lines
             clearLines();
             //Calculates distance between two pairs, can do this for multiple pairs. 
-            distanceStuff ();
+            distanceStuff (); resetCounters();
             //Clears the dead bubbles from game if the bubbles(people are not in game anymore)
             clearDeadBubbles();
             //Check if high fiving
@@ -70,6 +71,17 @@ public class Kinect2 : MonoBehaviour
 				bodies = new Body[numberOfBodies];
 				persons = new Dictionary<ulong, GameObject> ();
 				initialised = true;
+
+                //Setting counter for lines
+               /* counterArray = new float[6][];
+                for(int i=0; i<6; i++)
+                {
+                    counterArray[i] = new float[6];
+                    for(int k=0; k<6; k++)
+                    {
+                        counterArray[i][k] = 0f;
+                    }
+                }*/
 			}
 		}
 	}
@@ -139,6 +151,9 @@ public class Kinect2 : MonoBehaviour
 		person.name = id.ToString ();
 		Renderer renderer = person.GetComponent<Renderer>();
 		renderer.material.color = new Color (Random.Range (0f, 1f), Random.Range (0f, 1f), Random.Range (0f, 1f));
+
+        PersonInfo pi = person.GetComponent<PersonInfo>();
+        pi.playerID = id;
 	
 		return person;
 	}
@@ -530,11 +545,36 @@ public class Kinect2 : MonoBehaviour
 
         distance = (objectDistance(bubbleA, bubbleB)/2);
 
-        if(counter < distance)
-            {
-			
-            counter += .1f / lineDrawSpeed;
-            float x = Mathf.Lerp(0, distance, counter);
+        PersonInfo piA = bubbleA.GetComponent<PersonInfo>();
+        PersonInfo piB = bubbleB.GetComponent<PersonInfo>();
+
+        piA.lineRendererIDs.Add(piB.playerID, pairSecondDigit);
+        piB.lineRendererIDs.Add(piA.playerID, pairFirstDigit);
+
+        if (piA.counters.ContainsKey(piB.playerID) && piB.counters.ContainsKey(piA.playerID))
+        {
+            piA.counters[piB.playerID] += (0.1f / lineDrawSpeed);
+            piB.counters[piA.playerID] += (0.1f / lineDrawSpeed);
+
+            piA.counters[piB.playerID] = Mathf.Min(piA.counters[piB.playerID], 1f);
+            piB.counters[piA.playerID] = Mathf.Min(piB.counters[piA.playerID], 1f);
+        } else
+        {
+            piA.counters.Add(piB.playerID, 0f);
+            piB.counters.Add(piA.playerID, 0f);
+        }
+
+
+        
+
+
+
+            //counter += .1f / lineDrawSpeed;
+
+            //counterArray[pairFirstDigit][pairSecondDigit] += 0.1f;
+            //counterArray[pairSecondDigit][pairFirstDigit] += 0.1f;
+
+            float x = Mathf.Lerp(0, distance, piA.counters[piB.playerID]);  // counterArray[pairFirstDigit][pairSecondDigit]);
 
             float firstPosx = (bubbleA.transform.position.x);
             float secondPosx = (bubbleB.transform.position.x);
@@ -562,29 +602,44 @@ public class Kinect2 : MonoBehaviour
             lineRendererA.enabled = true;
             lineRendererB.enabled = true;
 
-			Debug.Log ("counter is smaller than distance" + counter);
-
-        }
-        else
-        {
-            lineRendererA.SetPosition(1, new Vector3(xvalues, yvalues, -5f));
-            lineRendererB.SetPosition(1, new Vector3(xvalues, yvalues, -5f));
-
-            lineRendererA.enabled = true;
-            lineRendererB.enabled = true;
-        }
+        
 
     }
     //End drawLineRenderer
 
 
+    private void resetCounters()
+    {
+        for(int i=0; i<6; i++)
+        {
+            List<ulong> toRemove = new List<ulong>();
 
+            PersonInfo pi = bubblesInGame[i].GetComponent<PersonInfo>();
+
+            foreach (ulong id in pi.counters.Keys)
+            {
+                if (pi.lineRendererIDs.ContainsKey(id) == false)
+                {
+                    toRemove.Add(id);
+                }
+            }
+
+            foreach (ulong id in toRemove)
+            {
+                pi.counters.Remove(id);
+            }
+        }
+    }
 
 
     private void clearLines()
     {
         for(int i = 0; i<bubblesInGame.Count; i++)
         {
+            PersonInfo pi = bubblesInGame[i].GetComponent<PersonInfo>();
+
+            pi.lineRendererIDs.Clear();
+
             for (int k = 0; k < 6; k++)
             {
                 LineRenderer lr = bubblesInGame[i].transform.GetChild(k).GetComponent<LineRenderer>();
