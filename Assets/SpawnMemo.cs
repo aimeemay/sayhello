@@ -23,6 +23,8 @@ public class SpawnMemo : MonoBehaviour {
             this.gameObject.SetActive(false);
             SetFactText();
         }
+
+
     }
 
 

@@ -20,7 +20,8 @@ public class Kinect2 : MonoBehaviour
 	private float yvalues;
 	public Sprite[] sprites;
 
-
+	//Counts where the line is in relation to its end point
+	public float counter = 0f;
 
 
 
@@ -320,7 +321,6 @@ public class Kinect2 : MonoBehaviour
 
 				if(bubblesCanLine) {
 					drawLineRenderer(pair);
-
 				}
                 
             }
@@ -485,15 +485,15 @@ public class Kinect2 : MonoBehaviour
 	}
     //End ObjectDistanceKinectJoint
 
-
-    //Counts where the line is in relation to its end point
-    public float counter = 0f;
+	 
+   
 
 
 
     //Draw Line between two people
     public void drawLineRenderer(IntPair pair)
     {
+		
         //get possible pair integers
         int pairFirstDigit = pair.firstDigit;
         int pairSecondDigit = pair.secondDigit;
@@ -512,6 +512,7 @@ public class Kinect2 : MonoBehaviour
         float distance;
         //Speed of drawing the line. 
         float lineDrawSpeed = 7f;
+
         
         //Sets the line renderer for personA and personB
         lineRendererA = bubbleA.transform.GetChild(pairSecondDigit).GetComponent<LineRenderer>();
@@ -529,8 +530,9 @@ public class Kinect2 : MonoBehaviour
 
         distance = (objectDistance(bubbleA, bubbleB)/2);
 
-        if(counter < (distance))
+        if(counter < distance)
             {
+			
             counter += .1f / lineDrawSpeed;
             float x = Mathf.Lerp(0, distance, counter);
 
@@ -538,6 +540,8 @@ public class Kinect2 : MonoBehaviour
             float secondPosx = (bubbleB.transform.position.x);
             float firstPosy = (bubbleA.transform.position.y);
             float secondPosy = (bubbleB.transform.position.y);
+
+
 
             xvalues = ((firstPosx + secondPosx) / 2f);
             yvalues = ((firstPosy + secondPosy) / 2f);
@@ -557,6 +561,8 @@ public class Kinect2 : MonoBehaviour
 
             lineRendererA.enabled = true;
             lineRendererB.enabled = true;
+
+			Debug.Log ("counter is smaller than distance" + counter);
 
         }
         else

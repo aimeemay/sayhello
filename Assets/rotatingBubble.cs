@@ -5,7 +5,7 @@ public class rotatingBubble : MonoBehaviour {
 	public float rotSpeed = 10f;
     public Color tenSecondColor = Color.red;
     private int seconds;
-    private float rate = 0.1f;
+    private float rate = 0.025f;
     private float ratio = 0.15f;
 	// Use this for initialization
 	void Start () {
@@ -22,7 +22,7 @@ public class rotatingBubble : MonoBehaviour {
         
 
 		if (Time.time - seconds >= 5){
-			tenSecondColor = Color.Lerp(Color.blue, Color.cyan, Mathf.PingPong(Time.time, 3));
+			tenSecondColor = Color.Lerp(Color.blue, Color.red, Mathf.PingPong(Time.time, 5));
             Renderer renderer = this.GetComponent<Renderer>();
             renderer.material.color = tenSecondColor;
             //this.transform.localScale += new Vector3(0.001f, 0.001f, 0);
