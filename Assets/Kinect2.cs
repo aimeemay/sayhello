@@ -50,7 +50,8 @@ public class Kinect2 : MonoBehaviour
             //Clear Lines
             clearLines();
             //Calculates distance between two pairs, can do this for multiple pairs. 
-            distanceStuff (); resetCounters();
+            distanceStuff (); 
+			//resetCounters();
             //Clears the dead bubbles from game if the bubbles(people are not in game anymore)
             clearDeadBubbles();
             //Check if high fiving
