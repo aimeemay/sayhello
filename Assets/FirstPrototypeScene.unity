@@ -641,6 +641,28 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 2b08a9b5caab3064aaad50d150c9bb86, type: 3}
   - {fileID: 21300000, guid: 60d491c3015248d44b49151bc4c9d109, type: 3}
   - {fileID: 21300000, guid: efb30f3711898964b9ecafa9c7b257ed, type: 3}
+  colors:
+  - serializedVersion: 2
+    rgba: 4278190335
+  - serializedVersion: 2
+    rgba: 4289279734
+  - serializedVersion: 2
+    rgba: 4291100850
+  - serializedVersion: 2
+    rgba: 4294324633
+  - serializedVersion: 2
+    rgba: 4290127119
+  - serializedVersion: 2
+    rgba: 4294558784
+  - serializedVersion: 2
+    rgba: 4294967173
+  - serializedVersion: 2
+    rgba: 4284531467
+  - serializedVersion: 2
+    rgba: 4281766415
+  - serializedVersion: 2
+    rgba: 4280548858
+  duration: 3
   bubblesInGame: []
 --- !u!82 &1508179848
 AudioSource:

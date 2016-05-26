@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
+
 using System.Collections.Generic;
+
 using Windows.Kinect;
 using System;
 using System.Linq;
@@ -19,22 +21,29 @@ public class Kinect2 : MonoBehaviour
 	private float xvalues;
 	private float yvalues;
 	public Sprite[] sprites;
+    public Color32[] colors;
+    public float duration = 3.0f;
+    private int index = 0;
+    private float timer = 0.0f;
+    private Color32 currentColor;
+    private Color32 startColor;
 
-	//Counts where the line is in relation to its end point
-	//public float counter = 0f;
+    //Counts where the line is in relation to its end point
+    //public float counter = 0f;
     //public float[][] counterArray;
 
 
 
-	//List Of bubbles In the game.
-	public List<GameObject> bubblesInGame;
+    //List Of bubbles In the game.
+    public List<GameObject> bubblesInGame;
 
 
     // Use this for initialisation
     void Start ()
 	{
 		initialised = false;
-	}
+        
+    }
 
 	void Update ()
 	{
@@ -56,8 +65,11 @@ public class Kinect2 : MonoBehaviour
             clearDeadBubbles();
             //Check if high fiving
             checkHighFive();
-			
-		}
+            //check if Hand Shaking
+            checkHandShake();
+
+
+        }
 	}
 
 	//Starts up the kinect. checks if sensors is working if not open it check for body sources and add any bodies to the dictionary. 
@@ -173,6 +185,7 @@ public class Kinect2 : MonoBehaviour
 		BiggestBubble.AddComponent<hasSmallBubbles>();
 		hasSmallBubbles item = BiggestBubble.GetComponent<hasSmallBubbles>();
 		item.spriteNum = 0;
+        item.colorNum = 0;
 		item.bubbleA = bubbleA;
 		item.bubbleB = bubbleB;
 		item.pair = pair;
@@ -541,12 +554,44 @@ public class Kinect2 : MonoBehaviour
             //if highshaking do something (floor bubble change color)
             if (handshakeDetected)
             {
-                Color tenSecondColor = Color.green;
-                tenSecondColor = Color.Lerp(Color.blue, Color.red, Mathf.PingPong(Time.time, 5));
-                Renderer renderer = bigBubsCreated[k].GetComponent<Renderer>();
-                renderer.material.color = tenSecondColor;
+                //startColor = colors[0];
 
+                //for(int i = 0; i<colors.Length; i++) { 
+                //    currentColor = Color.Lerp(startColor, colors[i], Mathf.PingPong(Time.time, 5));
+             
+
+                //}
+                Renderer renderer = bigBubsCreated[k].GetComponent<Renderer>();
+                //renderer.material.color = currentColor;
+
+                Debug.Log("I am in handshaker");
+
+
+                //What is the current sprite
+                if (bigBubsCreated[k].GetComponent<hasSmallBubbles>().delay < 0)
+                {
+                    if (bigBubsCreated[k].GetComponent<hasSmallBubbles>().colorNum == colors.Length -1)
+                    {
+                        bigBubsCreated[k].GetComponent<SpriteRenderer>().color = colors[0];
+                        bigBubsCreated[k].GetComponent<hasSmallBubbles>().colorNum = 0;
+                        
+                        renderer.material.color = colors[0];
+                        Debug.Log("I am in the last color list " + colors[0]);
+                    }
+                    else
+                    {
+                        bigBubsCreated[k].GetComponent<hasSmallBubbles>().colorNum++;
+                        int changeme = bigBubsCreated[k].GetComponent<hasSmallBubbles>().colorNum;
+                        bigBubsCreated[k].GetComponent<SpriteRenderer>().color = colors[changeme];
+
+                        renderer.material.color = colors[changeme];
+                        Debug.Log("I am in going through the list " + colors[changeme]);
+                    }
+
+                    bigBubsCreated[k].GetComponent<hasSmallBubbles>().delay = 0.5f;
+                }
             }
+            
 
         }
     } // End checkHandShake
@@ -752,6 +797,7 @@ public class hasSmallBubbles : MonoBehaviour {
 	public GameObject bubbleB;
 	public IntPair pair;
 	public int spriteNum;
+    public int colorNum;
 	public float delay = 0.5f;
 
 	void Update(){
