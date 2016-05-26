@@ -548,24 +548,26 @@ public class Kinect2 : MonoBehaviour
 
         PersonInfo piA = bubbleA.GetComponent<PersonInfo>();
         PersonInfo piB = bubbleB.GetComponent<PersonInfo>();
-
-        piA.lineRendererIDs.Add(piB.playerID, pairSecondDigit);
-        piB.lineRendererIDs.Add(piA.playerID, pairFirstDigit);
-
-        if (piA.counters.ContainsKey(piB.playerID) && piB.counters.ContainsKey(piA.playerID))
+        if (piA.lineRendererIDs != null && piB.lineRendererIDs != null)
         {
-            piA.counters[piB.playerID] += (0.1f / lineDrawSpeed);
-            piB.counters[piA.playerID] += (0.1f / lineDrawSpeed);
+            piA.lineRendererIDs.Add(piB.playerID, pairSecondDigit);
+            piB.lineRendererIDs.Add(piA.playerID, pairFirstDigit);
 
-            piA.counters[piB.playerID] = Mathf.Min(piA.counters[piB.playerID], 1f);
-            piB.counters[piA.playerID] = Mathf.Min(piB.counters[piA.playerID], 1f);
-        } else
-        {
-            piA.counters.Add(piB.playerID, 0f);
-            piB.counters.Add(piA.playerID, 0f);
-        }
+            if (piA.counters.ContainsKey(piB.playerID) && piB.counters.ContainsKey(piA.playerID))
+            {
+                piA.counters[piB.playerID] += (0.1f / lineDrawSpeed);
+                piB.counters[piA.playerID] += (0.1f / lineDrawSpeed);
 
+                piA.counters[piB.playerID] = Mathf.Min(piA.counters[piB.playerID], 1f);
+                piB.counters[piA.playerID] = Mathf.Min(piB.counters[piA.playerID], 1f);
+            }
+            else
+            {
+                piA.counters.Add(piB.playerID, 0f);
+                piB.counters.Add(piA.playerID, 0f);
+            }
 
+        
         
 
 
@@ -603,7 +605,7 @@ public class Kinect2 : MonoBehaviour
             lineRendererA.enabled = true;
             lineRendererB.enabled = true;
 
-        
+        }
 
     }
     //End drawLineRenderer
@@ -635,16 +637,19 @@ public class Kinect2 : MonoBehaviour
 
     private void clearLines()
     {
-        for(int i = 0; i<bubblesInGame.Count; i++)
-        {
-            PersonInfo pi = bubblesInGame[i].GetComponent<PersonInfo>();
-
-            pi.lineRendererIDs.Clear();
-
-            for (int k = 0; k < 6; k++)
+        
+            for (int i = 0; i < bubblesInGame.Count; i++)
             {
-                LineRenderer lr = bubblesInGame[i].transform.GetChild(k).GetComponent<LineRenderer>();
-                lr.enabled = false;
+                PersonInfo pi = bubblesInGame[i].GetComponent<PersonInfo>();
+
+                if(pi.lineRendererIDs != null) {
+                pi.lineRendererIDs.Clear();
+
+                for (int k = 0; k < 6; k++)
+                {
+                    LineRenderer lr = bubblesInGame[i].transform.GetChild(k).GetComponent<LineRenderer>();
+                    lr.enabled = false;
+                }
             }
         }
     }
