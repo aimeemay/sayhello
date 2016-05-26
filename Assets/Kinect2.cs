@@ -480,8 +480,80 @@ public class Kinect2 : MonoBehaviour
 	} // End checkHighFive
 
 
+
+    public void checkHandShake()
+    {
+        //Check through BigBubs to see if they are hand shaking
+        for (int k = 0; k < bigBubsCreated.Count; k++)
+        {
+            //Get each bubble from big bubble
+            hasSmallBubbles item = bigBubsCreated[k].GetComponent<hasSmallBubbles>();
+            GameObject BubbleA = item.bubbleA;
+            GameObject BubbleB = item.bubbleB;
+
+
+            //create list of kinect bodies
+            List<Body> trackedIDs = new List<Body>();
+            foreach (Body body in bodies)
+            {
+                if (body == null)
+                {
+                    continue;
+                }
+                if (body.IsTracked)
+                {
+                    trackedIDs.Add(body);
+                }
+            }
+
+            //Get Kinect objects of Bubble A and Bubble B
+            for (int i = 0; i < trackedIDs.Count; i++)
+            {
+                if (Convert.ToInt64(trackedIDs[i].TrackingId) == Int64.Parse(BubbleA.name))
+                {
+                    KinectA = trackedIDs[i];
+                }
+            }
+
+            for (int i = 0; i < trackedIDs.Count; i++)
+            {
+                if (Convert.ToInt64(trackedIDs[i].TrackingId) == Int64.Parse(BubbleB.name))
+                {
+                    KinectB = trackedIDs[i];
+                }
+            }
+
+            //Get Hand and shoulder of Bubble A and Bubble B
+            Windows.Kinect.Joint KinectA_Hand = KinectA.Joints[JointType.HandRight];
+            Windows.Kinect.Joint KinectB_Hand = KinectB.Joints[JointType.HandRight];
+            Windows.Kinect.Joint KinectB_Shoulder = KinectB.Joints[JointType.ShoulderRight];
+            Windows.Kinect.Joint KinectA_Shoulder = KinectA.Joints[JointType.ShoulderRight];
+
+            bool handshakeDetected = false;
+            //Check if they are highshaking
+            if (KinectA_Hand.Position.Y < KinectA_Shoulder.Position.Y
+                && KinectB_Hand.Position.Y < KinectB_Shoulder.Position.Y
+                && ObjectDistanceKinectJoint(KinectA_Hand, KinectB_Hand) < 0.1f)
+            {
+                handshakeDetected = true;
+            }
+
+            //if highshaking do something (floor bubble change color)
+            if (handshakeDetected)
+            {
+                Color tenSecondColor = Color.green;
+                tenSecondColor = Color.Lerp(Color.blue, Color.red, Mathf.PingPong(Time.time, 5));
+                Renderer renderer = bigBubsCreated[k].GetComponent<Renderer>();
+                renderer.material.color = tenSecondColor;
+
+            }
+
+        }
+    } // End checkHandShake
+
+
     //Check Distance between two joints
-	private float ObjectDistanceKinectJoint(Windows.Kinect.Joint JointA, Windows.Kinect.Joint JointB)
+    private float ObjectDistanceKinectJoint(Windows.Kinect.Joint JointA, Windows.Kinect.Joint JointB)
 	{
 		float a; //Higher Number
 		float b;
