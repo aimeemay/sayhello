@@ -28,7 +28,6 @@ public class SpawnMemo : MonoBehaviour {
             //this.gameObject.SetActive(false);
             //SetFactText();
 			if (!exists) {
-				Debug.Log ("Im running");
 				GameObject video = (GameObject)Instantiate (randomObjects[index], this.transform.position, Quaternion.identity);
 				exists = true;
 			}
