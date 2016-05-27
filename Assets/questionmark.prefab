@@ -25,8 +25,9 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 133146}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.19, y: -0.95, z: 0}
+  m_LocalPosition: {x: 0.22, y: -1.57, z: -4.71}
   m_LocalScale: {x: 0.49863043, y: 0.49863043, z: 0.49863043}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -41,9 +42,9 @@ BoxCollider2D:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_UsedByEffector: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.01614989, y: 0.016150367}
   serializedVersion: 2
-  m_Size: {x: 1.28, y: 1.28}
+  m_Size: {x: 0.86139774, y: 0.8614015}
 --- !u!114 &11444130
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -57,9 +58,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   funFacto: {fileID: 0}
   videoBox: {fileID: 131912, guid: 8f1f4977c9644ef40bb77027b56331a8, type: 2}
-  randomObjects: []
+  exists: 0
+  randomObjects:
+  - {fileID: 158168, guid: 7e83725f66c77594ebcd9730e4357331, type: 2}
   index: 0
   offset: {x: 0, y: -5, z: 0}
+  video: {fileID: 0}
+  text: {fileID: 0}
 --- !u!212 &21294420
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -85,7 +90,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
-  m_SortingOrder: 5
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 0d17b2b958634914dae658a83dbc9a43, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

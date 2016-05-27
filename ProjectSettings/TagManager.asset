@@ -8,6 +8,8 @@ TagManager:
   - Floor
   - FunFact
   - WallCollide
+  - WalkTag
+  - goals
   layers:
   - Default
   - TransparentFX

@@ -5,7 +5,8 @@ using System.Collections.Generic;
 using Windows.Kinect;
 using System;
 using System.Linq;
-using Random=UnityEngine.Random;
+using Random = UnityEngine.Random;
+using UnityEngine.SceneManagement;
 
 public class Kinect2 : MonoBehaviour
 {
@@ -27,7 +28,9 @@ public class Kinect2 : MonoBehaviour
     private float timer = 0.0f;
     private Color32 currentColor;
     private Color32 startColor;
-
+    public GameObject walkhere;
+    public GameObject walkiePrefab;
+    public float rotSpeed = 10f;
     //Counts where the line is in relation to its end point
     //public float counter = 0f;
     //public float[][] counterArray;
@@ -42,7 +45,7 @@ public class Kinect2 : MonoBehaviour
     void Start ()
 	{
 		initialised = false;
-        
+
     }
 
 	void Update ()
@@ -67,7 +70,13 @@ public class Kinect2 : MonoBehaviour
             checkHighFive();
             //check if Hand Shaking
             checkHandShake();
+            //removes walk here text
+            RemoveWalkHere();
 
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                SceneManager.LoadScene("FirstPrototypeScene");
+            }
 
         }
 	}
@@ -567,6 +576,7 @@ public class Kinect2 : MonoBehaviour
                 Debug.Log("I am in handshaker");
 
 
+                
                 //What is the current sprite
                 if (bigBubsCreated[k].GetComponent<hasSmallBubbles>().delay < 0)
                 {
@@ -643,23 +653,55 @@ public class Kinect2 : MonoBehaviour
         
         //Calculates distance of line
         float distance;
+        float distanceFirst;
         //Speed of drawing the line. 
         float lineDrawSpeed = 7f;
 
-        
+        //Find midPoint
+        float firstPosx = (bubbleA.transform.position.x);
+        float secondPosx = (bubbleB.transform.position.x);
+        float firstPosy = (bubbleA.transform.position.y);
+        float secondPosy = (bubbleB.transform.position.y);
+
+        Vector3 startA = bubbleA.transform.position;
+        Vector3 startB = bubbleB.transform.position;
+
+        xvalues = ((firstPosx + secondPosx) / 2f);
+        yvalues = ((firstPosy + secondPosy) / 2f);
+
+
         //Sets the line renderer for personA and personB
         lineRendererA = bubbleA.transform.GetChild(pairSecondDigit).GetComponent<LineRenderer>();
         lineRendererB = bubbleB.transform.GetChild(pairFirstDigit).GetComponent<LineRenderer>();
 
+        //Get X and Y - dy dx
+        //float dxA = xvalues - bubbleA.transform.position.x;
+        //float dyA = yvalues - bubbleA.transform.position.y;
+
+        //Double angleA = Math.Atan(Convert.ToDouble(dyA/dxA));
+
+        //float startAX = bubbleA.transform.position.x + (float)Math.Sin(angleA);
+        //float startAY = bubbleA.transform.position.y + (float)Math.Cos(angleA);
+        //distanceFirst = (objectDistance(bubbleA, bubbleB) / 2);
+        //float startNum = Mathf.Lerp(0, distanceFirst, 5);
+
+        //Vector3 midPointStart = new Vector3(xvalues, yvalues);
+
+        //Vector3 startPointLineA = startNum * Vector3.Normalize(midPointStart - startA) + startA;
+        //startPointLineA.z = -5f;
+        //Vector3 startPointLineB = startNum * Vector3.Normalize(midPointStart - startB) + startB;
+        //startPointLineB.z = -5f;
+
+
         //Sets the starting position of the lineRenderer for PersonA and PersonB
-        lineRendererA.SetPosition(0, new Vector3( bubbleA.transform.position.x, bubbleA.transform.position.y, -5f));
+        lineRendererA.SetPosition(0, new Vector3(bubbleA.transform.position.x, bubbleA.transform.position.y, -5f));
         lineRendererB.SetPosition(0, new Vector3(bubbleB.transform.position.x, bubbleB.transform.position.y, -5f));
 
-        lineRendererA.SetWidth(.05f, .02f);
-        lineRendererB.SetWidth(.05f, .02f);
+        lineRendererA.SetWidth(.0125f, .0125f);
+        lineRendererB.SetWidth(.0125f, .0125f);
 
-        lineRendererA.sortingOrder = -5;
-        lineRendererB.sortingOrder = -5;
+        lineRendererA.sortingOrder = 2;
+        lineRendererB.sortingOrder = 2;
 
         distance = (objectDistance(bubbleA, bubbleB)/2);
 
@@ -696,18 +738,9 @@ public class Kinect2 : MonoBehaviour
 
             float x = Mathf.Lerp(0, distance, piA.counters[piB.playerID]);  // counterArray[pairFirstDigit][pairSecondDigit]);
 
-            float firstPosx = (bubbleA.transform.position.x);
-            float secondPosx = (bubbleB.transform.position.x);
-            float firstPosy = (bubbleA.transform.position.y);
-            float secondPosy = (bubbleB.transform.position.y);
+            
 
-
-
-            xvalues = ((firstPosx + secondPosx) / 2f);
-            yvalues = ((firstPosy + secondPosy) / 2f);
-
-            Vector3 startA = bubbleA.transform.position;
-            Vector3 startB = bubbleB.transform.position;
+            
             Vector3 midPoint = new Vector3(xvalues, yvalues);
 
             Vector3 pointAlongLineA = x * Vector3.Normalize(midPoint - startA) + startA;
@@ -768,6 +801,25 @@ public class Kinect2 : MonoBehaviour
                     lr.enabled = false;
                 }
             }
+        }
+    }
+
+    private bool existsAlready = false;
+    public void RemoveWalkHere()
+    {
+        Vector3 offset = new Vector3(0.3f, 4.25f, +7f);
+        if (bubblesInGame.Count < 1){
+            if (!existsAlready)
+            {
+                walkhere = (GameObject)Instantiate(walkiePrefab, transform.position + offset, Quaternion.identity);
+                existsAlready = true;
+            }
+
+        }else
+        {
+            Destroy(walkhere);
+            existsAlready = false;
+            //bool otherBool = SpawnMemo. 
         }
     }
 
