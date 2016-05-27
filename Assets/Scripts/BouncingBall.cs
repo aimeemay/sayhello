@@ -4,6 +4,8 @@ using System.Collections;
 public class BouncingBall: MonoBehaviour
 {
     public float speed = 0.001f;
+    public int personScore1 = 0;
+    public int personScore2 = 0;
 
     // Use this for initialization
     void Start()
@@ -58,15 +60,45 @@ public class BouncingBall: MonoBehaviour
             GetComponent<Rigidbody2D>().velocity = dir * speed;
         }
 
-        if (col.gameObject.tag == "goals")
+
+        if (col.gameObject.name == "Goal1")
         {
-            Destroy(this.gameObject);
-            DestroyGameObjectsWithTag("goals");
+            personScore1 += 1;
+            this.transform.position = new Vector3(0.22f, -1.54f, -4.71f);
+            GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
+            StartCoroutine(waitingCoroutine());
         }
+
+        if (col.gameObject.name == "Goal2")
+        {
+            personScore2 += 1;
+            GetComponent<Rigidbody2D>().velocity = new Vector2(0,0);
+            this.transform.position = new Vector3(0.22f, -1.54f, -4.71f);
+            StartCoroutine(waitingCoroutine());
+            
+        }
+
+        if (personScore1 >= 5 || personScore2 >= 5)
+        {
+                Destroy(this.gameObject);
+                DestroyGameObjectsWithTag("goals");
+                personScore1 = 0;
+                personScore2 = 0;
+        }
+
+        
 
 
 
 
     }
+    IEnumerator waitingCoroutine(){
+            this.GetComponent<CircleCollider2D>().enabled = false;
+            Renderer renderer = this.GetComponent<Renderer>();
+            renderer.material.color = Color.black;
+            yield return new WaitForSeconds(2);
+            renderer.material.color = Color.green;
+            this.GetComponent<CircleCollider2D>().enabled = true;
+        }
 }
 

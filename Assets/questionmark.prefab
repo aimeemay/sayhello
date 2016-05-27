@@ -27,7 +27,6 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.22, y: -1.57, z: -4.71}
   m_LocalScale: {x: 0.49863043, y: 0.49863043, z: 0.49863043}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -60,10 +59,10 @@ MonoBehaviour:
   videoBox: {fileID: 131912, guid: 8f1f4977c9644ef40bb77027b56331a8, type: 2}
   exists: 0
   randomObjects:
-  - {fileID: 158168, guid: 7e83725f66c77594ebcd9730e4357331, type: 2}
+  - {fileID: 101996, guid: 6c4b5e36d4fcf1b4eb613b39cc15bf30, type: 2}
   index: 0
   offset: {x: 0, y: -5, z: 0}
-  video: {fileID: 0}
+  video: {fileID: 101996, guid: 6c4b5e36d4fcf1b4eb613b39cc15bf30, type: 2}
   text: {fileID: 0}
 --- !u!212 &21294420
 SpriteRenderer:
