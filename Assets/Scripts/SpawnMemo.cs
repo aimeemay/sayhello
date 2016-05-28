@@ -16,17 +16,16 @@ public class SpawnMemo : MonoBehaviour {
     // Use this for initialization
     void Start () {
 		index = Random.Range (0, randomObjects.Length);
-	}
+        
+        text.text = Mathf.Round(timeLeft).ToString();
+        gameObject.SetActive(true);
+    }
 	
 	// Update is called once per frame
 	void Update () {
-	
-	}
-    public bool getExists()
-    {
-        bool doesit = exists;
-        return doesit;
+        
     }
+    
 
 
     void OnTriggerStay2D(Collider2D col)
@@ -36,11 +35,12 @@ public class SpawnMemo : MonoBehaviour {
         {
             
             timeLeft -= Time.deltaTime;
-            text.text = " " + Mathf.Round(timeLeft);
+            text.text = Mathf.Round(timeLeft).ToString();
             if (timeLeft < 0)
             {
-                gameObject.SetActive(false);
-                text.text = "";
+                Destroy(this.gameObject);
+
+                text.text = null;
                 //SetFactText();
                 if (!exists)
                 {
@@ -59,4 +59,8 @@ public class SpawnMemo : MonoBehaviour {
     {
         funFacto.text = "Oreo's are more addictive than coke";
     }
+
+   
+
+    
 }

@@ -78,10 +78,11 @@ public class BouncingBall: MonoBehaviour
             
         }
 
-        if (personScore1 >= 5 || personScore2 >= 5)
+        if (personScore1 >= 1 || personScore2 >= 1)
         {
-                Destroy(this.gameObject);
-                DestroyGameObjectsWithTag("goals");
+                DestroyGameObjectsWithTag("ballgoals");
+                //Destroy(this.gameObject);
+                //DestroyGameObjectsWithTag("goals");
                 personScore1 = 0;
                 personScore2 = 0;
         }
@@ -95,7 +96,7 @@ public class BouncingBall: MonoBehaviour
     IEnumerator waitingCoroutine(){
             this.GetComponent<CircleCollider2D>().enabled = false;
             Renderer renderer = this.GetComponent<Renderer>();
-            renderer.material.color = Color.black;
+            renderer.material.color = Color.red;
             yield return new WaitForSeconds(2);
             renderer.material.color = Color.green;
             this.GetComponent<CircleCollider2D>().enabled = true;

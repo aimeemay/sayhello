@@ -10,6 +10,7 @@ TagManager:
   - WallCollide
   - WalkTag
   - goals
+  - ballgoals
   layers:
   - Default
   - TransparentFX

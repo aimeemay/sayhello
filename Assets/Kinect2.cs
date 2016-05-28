@@ -24,13 +24,16 @@ public class Kinect2 : MonoBehaviour
 	public Sprite[] sprites;
     public Color32[] colors;
     public float duration = 3.0f;
-    private int index = 0;
-    private float timer = 0.0f;
+    //private int index = 0;
+    //private float timer = 0.0f;
     private Color32 currentColor;
     private Color32 startColor;
     public GameObject walkhere;
     public GameObject walkiePrefab;
     public float rotSpeed = 10f;
+    private GameObject questionMark;
+    public GameObject questionMarkPrefab;
+    private bool exists = false;
     //Counts where the line is in relation to its end point
     //public float counter = 0f;
     //public float[][] counterArray;
@@ -72,14 +75,41 @@ public class Kinect2 : MonoBehaviour
             checkHandShake();
             //removes walk here text
             RemoveWalkHere();
+            //setsExistanceOfGame
+            setExists();
+            //hoepfully removes line renderer when game is up
+            removeLineRendererWhenGameIsUp();
+            
 
             if (Input.GetKeyDown(KeyCode.R))
             {
                 SceneManager.LoadScene("FirstPrototypeScene");
             }
 
+
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                if (GameObject.FindGameObjectWithTag("goals") == null){ 
+                    if (GameObject.Find("questionmark") == null) { 
+                        if (!exists)
+                        {
+                            questionMark = (GameObject)Instantiate(questionMarkPrefab, transform.position = new Vector3(0.22f, -1.54f, -4.71f), Quaternion.identity);
+                            exists = true;
+                        }
+                    }
+                }
+            }
+
         }
 	}
+
+    public void setExists()
+    {
+        if (GameObject.FindGameObjectWithTag("goals") == null)
+        {
+            exists = false;
+        }
+    }
 
 	//Starts up the kinect. checks if sensors is working if not open it check for body sources and add any bodies to the dictionary. 
 	private void StartKinect ()
@@ -653,7 +683,7 @@ public class Kinect2 : MonoBehaviour
         
         //Calculates distance of line
         float distance;
-        float distanceFirst;
+        //float distanceFirst;
         //Speed of drawing the line. 
         float lineDrawSpeed = 7f;
 
@@ -793,14 +823,21 @@ public class Kinect2 : MonoBehaviour
                 PersonInfo pi = bubblesInGame[i].GetComponent<PersonInfo>();
 
                 if(pi.lineRendererIDs != null) {
-                pi.lineRendererIDs.Clear();
+                    pi.lineRendererIDs.Clear();
 
-                for (int k = 0; k < 6; k++)
-                {
-                    LineRenderer lr = bubblesInGame[i].transform.GetChild(k).GetComponent<LineRenderer>();
-                    lr.enabled = false;
+                    for (int k = 0; k < 6; k++){
+                            LineRenderer lr = bubblesInGame[i].transform.GetChild(k).GetComponent<LineRenderer>();
+                            lr.enabled = false;
+                        }
                 }
             }
+    }
+
+    public void removeLineRendererWhenGameIsUp()
+    {
+        if(GameObject.FindGameObjectWithTag("goals") != null)
+        {
+            clearLines();
         }
     }
 
