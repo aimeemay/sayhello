@@ -13,17 +13,20 @@ public class SpawnMemo : MonoBehaviour {
     private int seconds;
     private float timeLeft = 5f;
     public Text text;
+    
+    
     // Use this for initialization
     void Start () {
 		index = Random.Range (0, randomObjects.Length);
         
-        text.text = Mathf.Round(timeLeft).ToString();
+
+        //text.text = Mathf.Round(timeLeft).ToString();
         gameObject.SetActive(true);
     }
 	
 	// Update is called once per frame
 	void Update () {
-        
+        setEnable();
     }
     
 
@@ -39,7 +42,7 @@ public class SpawnMemo : MonoBehaviour {
             if (timeLeft < 0)
             {
                 Destroy(this.gameObject);
-
+                //this.enabled = false;
                 text.text = null;
                 //SetFactText();
                 if (!exists)
@@ -53,6 +56,10 @@ public class SpawnMemo : MonoBehaviour {
 
 
     }
+    public Text getCount()
+    {
+        return text;
+    }
 
 
     void SetFactText()
@@ -60,6 +67,14 @@ public class SpawnMemo : MonoBehaviour {
         funFacto.text = "Oreo's are more addictive than coke";
     }
 
+    public void setEnable()
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            this.enabled = true;
+            timeLeft = 5f;
+        }
+    }
    
 
     

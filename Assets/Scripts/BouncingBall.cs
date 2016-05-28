@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class BouncingBall: MonoBehaviour
@@ -6,6 +7,8 @@ public class BouncingBall: MonoBehaviour
     public float speed = 0.001f;
     public int personScore1 = 0;
     public int personScore2 = 0;
+    public Text score1;
+    public Text score2;
 
     // Use this for initialization
     void Start()
@@ -64,6 +67,7 @@ public class BouncingBall: MonoBehaviour
         if (col.gameObject.name == "Goal1")
         {
             personScore1 += 1;
+            //score1.text = personScore1.ToString();
             this.transform.position = new Vector3(0.22f, -1.54f, -4.71f);
             GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
             StartCoroutine(waitingCoroutine());
@@ -72,13 +76,14 @@ public class BouncingBall: MonoBehaviour
         if (col.gameObject.name == "Goal2")
         {
             personScore2 += 1;
+            //score1.text = personScore2.ToString();
             GetComponent<Rigidbody2D>().velocity = new Vector2(0,0);
             this.transform.position = new Vector3(0.22f, -1.54f, -4.71f);
             StartCoroutine(waitingCoroutine());
             
         }
 
-        if (personScore1 >= 1 || personScore2 >= 1)
+        if (personScore1 >= 3 || personScore2 >= 3)
         {
                 DestroyGameObjectsWithTag("ballgoals");
                 //Destroy(this.gameObject);
@@ -100,6 +105,16 @@ public class BouncingBall: MonoBehaviour
             yield return new WaitForSeconds(2);
             renderer.material.color = Color.green;
             this.GetComponent<CircleCollider2D>().enabled = true;
+        }
+
+        public Text getScore1()
+        {
+            return  score1;
+        }
+
+        public Text getScore2()
+        {
+            return score2;
         }
 }
 

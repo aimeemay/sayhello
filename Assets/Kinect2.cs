@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Windows.Kinect;
 using System;
 using System.Linq;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 using UnityEngine.SceneManagement;
 
@@ -31,9 +32,10 @@ public class Kinect2 : MonoBehaviour
     public GameObject walkhere;
     public GameObject walkiePrefab;
     public float rotSpeed = 10f;
-    private GameObject questionMark;
+    public GameObject questionMark;
     public GameObject questionMarkPrefab;
     private bool exists = false;
+    
     //Counts where the line is in relation to its end point
     //public float counter = 0f;
     //public float[][] counterArray;
@@ -83,19 +85,21 @@ public class Kinect2 : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.R))
             {
-                SceneManager.LoadScene("FirstPrototypeScene");
+                SceneManager.LoadScene("FinalScene");
             }
 
 
             if (Input.GetKeyDown(KeyCode.S))
             {
                 if (GameObject.FindGameObjectWithTag("goals") == null){ 
-                    if (GameObject.Find("questionmark") == null) { 
-                        if (!exists)
-                        {
-                            questionMark = (GameObject)Instantiate(questionMarkPrefab, transform.position = new Vector3(0.22f, -1.54f, -4.71f), Quaternion.identity);
-                            exists = true;
-                        }
+                    if (GameObject.Find("questionmark") == null) {
+                            if (!exists)
+                            {
+                                //GameObject.Find("questionmark").enable = true;
+                                questionMark = (GameObject)Instantiate(questionMarkPrefab, transform.position = new Vector3(0.22f, -1.54f, -4.71f), Quaternion.identity);
+                                exists = true;
+                            }
+                        
                     }
                 }
             }
@@ -603,7 +607,7 @@ public class Kinect2 : MonoBehaviour
                 Renderer renderer = bigBubsCreated[k].GetComponent<Renderer>();
                 //renderer.material.color = currentColor;
 
-                Debug.Log("I am in handshaker");
+                
 
 
                 
@@ -838,8 +842,21 @@ public class Kinect2 : MonoBehaviour
         if(GameObject.FindGameObjectWithTag("goals") != null)
         {
             clearLines();
+            for (int i = 0; i < bigBubsCreated.Count; i++)
+            {
+                bigBubsCreated[i].GetComponent<Renderer>().enabled = false;
+                for(int j = 0; j < bubblesInGame.Count; j++)
+                {
+                    bubblesInGame[j].GetComponent<SpriteRenderer>().enabled = true;
+                  
+                }
+
+               
+            }
         }
     }
+
+    
 
     private bool existsAlready = false;
     public void RemoveWalkHere()
