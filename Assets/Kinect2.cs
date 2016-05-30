@@ -97,7 +97,7 @@ public class Kinect2 : MonoBehaviour
                             if (!exists)
                             {
                                 //GameObject.Find("questionmark").enable = true;
-                                questionMark = (GameObject)Instantiate(questionMarkPrefab, transform.position = new Vector3(0.22f, -1.54f, -4.71f), Quaternion.identity);
+                                questionMark = (GameObject)Instantiate(questionMarkPrefab, transform.position = new Vector3(0.181f, -0.977f, -4.71f), Quaternion.identity);
                                 exists = true;
                             }
                         
@@ -105,7 +105,16 @@ public class Kinect2 : MonoBehaviour
                 }
             }
 
-        }
+           
+            if (Input.GetKeyDown(KeyCode.W))
+            {
+                Destroy(walkhere);
+                
+
+            }
+    
+
+}
 	}
 
     public void setExists()

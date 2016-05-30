@@ -27,6 +27,7 @@ public class SpawnMemo : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         setEnable();
+        destroyThis();
     }
     
 
@@ -73,6 +74,16 @@ public class SpawnMemo : MonoBehaviour {
         {
             this.enabled = true;
             timeLeft = 5f;
+        }
+    }
+
+    public void destroyThis()
+    {
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            Destroy(this.gameObject);
+            
+            
         }
     }
    
