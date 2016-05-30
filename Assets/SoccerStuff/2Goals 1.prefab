@@ -44,7 +44,6 @@ GameObject:
   - 50: {fileID: 5084564}
   - 114: {fileID: 11461194}
   - 58: {fileID: 5842706}
-  - 108: {fileID: 10860538}
   m_Layer: 8
   m_Name: Ball
   m_TagString: Untagged
@@ -76,7 +75,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 164948}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.671, y: 0.042, z: 0}
+  m_LocalPosition: {x: -1.529, y: -0.433, z: 0}
   m_LocalScale: {x: 0.0926373, y: 0.35503536, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
@@ -89,7 +88,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 101996}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.1239223, y: -2.9215887, z: 0}
+  m_LocalPosition: {x: 0.05357635, y: -1.0998335, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -105,7 +104,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 169544}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.144, y: 0.09, z: 0}
+  m_LocalPosition: {x: 0.176, y: -0.394, z: 0}
   m_LocalScale: {x: 0.05535162, y: 0.05535165, z: 0.11136523}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
@@ -118,7 +117,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 172356}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.655, y: 0.027, z: 0}
+  m_LocalPosition: {x: 1.829, y: -0.385, z: 0}
   m_LocalScale: {x: 0.0926373, y: 0.35029292, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
@@ -183,39 +182,6 @@ BoxCollider2D:
   m_Offset: {x: 0.0000019073486, y: 0}
   serializedVersion: 2
   m_Size: {x: 0.99999994, y: 1}
---- !u!108 &10860538
-Light:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 169544}
-  m_Enabled: 1
-  serializedVersion: 6
-  m_Type: 2
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
-  m_Range: 10
-  m_SpotAngle: 30
-  m_CookieSize: 10
-  m_Shadows:
-    m_Type: 0
-    m_Resolution: -1
-    m_Strength: 1
-    m_Bias: 0.05
-    m_NormalBias: 0.4
-    m_NearPlane: 0.2
-  m_Cookie: {fileID: 0}
-  m_DrawHalo: 0
-  m_Flare: {fileID: 0}
-  m_RenderMode: 0
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_Lightmapping: 4
-  m_BounceIntensity: 1
-  m_ShadowRadius: 0
-  m_ShadowAngle: 0
-  m_AreaSize: {x: 1, y: 1}
 --- !u!114 &11461194
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -230,6 +196,8 @@ MonoBehaviour:
   speed: 1
   personScore1: 0
   personScore2: 0
+  score1: {fileID: 0}
+  score2: {fileID: 0}
 --- !u!212 &21251596
 SpriteRenderer:
   m_ObjectHideFlags: 1

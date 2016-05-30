@@ -67,7 +67,8 @@ public class Kinect2 : MonoBehaviour
             //Clear Lines
             clearLines();
             //Calculates distance between two pairs, can do this for multiple pairs. 
-            distanceStuff (); 
+            distanceStuff ();
+            bigBubbleScale();
 			//resetCounters();
             //Clears the dead bubbles from game if the bubbles(people are not in game anymore)
             clearDeadBubbles();
@@ -227,7 +228,9 @@ public class Kinect2 : MonoBehaviour
 		//giving bubble context
 		BiggestBubble.AddComponent<hasSmallBubbles>();
 		hasSmallBubbles item = BiggestBubble.GetComponent<hasSmallBubbles>();
-		item.spriteNum = 0;
+        Vector3 size = new Vector3(0.008f, 0.008f, 0f);
+        BiggestBubble.transform.localScale = size;
+        item.spriteNum = 0;
         item.colorNum = 0;
 		item.bubbleA = bubbleA;
 		item.bubbleB = bubbleB;
@@ -235,6 +238,15 @@ public class Kinect2 : MonoBehaviour
         bigBubsCreated.Add(BiggestBubble);
 		return BiggestBubble;
 	}
+
+    public void bigBubbleScale()
+    {
+        for (int i = 0; i < bigBubsCreated.Count; i++)
+        {
+            Vector3 size = new Vector3(0.005f, 0.005f, 0f);
+            bigBubsCreated[i].transform.localScale = size;
+        }
+    }
 
 	//converts persons dictionary into a list so we can iterate over people in game and give them bubbles;
 	public List<GameObject> dictionaryConverter ()
@@ -438,7 +450,7 @@ public class Kinect2 : MonoBehaviour
 	{
 		Windows.Kinect.Joint spinebase = body.Joints [JointType.SpineBase];
 		CameraSpacePoint csp = spinebase.Position;
-		Vector3 size = new Vector3 (0.08f, 0.08f, 0);
+		Vector3 size = new Vector3 (0.06f, 0.06f, 0);
 		//position of persons game object(edit this for positional reajustment)
 		person.transform.position = new Vector3 (csp.X + 0.25f, -csp.Z + 0.45f, 0f);
 		person.transform.localScale = size;
